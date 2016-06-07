@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from .config import config
 
 app = Flask(__name__)
@@ -24,3 +24,4 @@ with app.app_context():
     login_manager.login_message = u'请先登陆系统,若遗忘密码，请联系管理员'
 
 from .views import *  # noqa
+from .models import *  # noqa
