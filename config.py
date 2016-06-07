@@ -1,5 +1,6 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
+url_db = 'mysql://tj:tj@172.16.6.104/tj'
 
 CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
