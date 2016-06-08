@@ -3,11 +3,14 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_socketio import SocketIO
+
 from .config import config
 
 app = Flask(__name__)
 login_manager = LoginManager()
 db = SQLAlchemy()
+socketio = SocketIO()
 
 with app.app_context():
 
@@ -22,6 +25,8 @@ with app.app_context():
     login_manager.session_protection = 'strong'
     login_manager.login_view = 'login'
     login_manager.login_message = u'请先登陆系统,若遗忘密码，请联系管理员'
+
+    socketio.init_app(app)
 
 from .views import *  # noqa
 from .models import *  # noqa
