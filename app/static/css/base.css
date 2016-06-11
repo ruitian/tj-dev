@@ -1,0 +1,35 @@
+/* side-nav */
+html {
+    font-size: 10px;
+}
+
+body {
+    background-color: #ecf0f1;
+}
+.container-fluid {
+    padding: 0;
+    position: relative;
+}
+.side-nav {
+    width: 80px;
+    height: 100%;
+    padding-top: 15px;
+    position: fixed;
+    background-color: #3e474e;
+}
+
+.nav > li {
+    text-align: center;
+}
+
+.nav > li > a > span {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #60676d;
+}
+
+
+.side-content {
+    margin-left: 100px;
+    height: 100%;
+}

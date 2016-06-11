@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/server.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="top-name">
+        我的主机
+    </div>
+    <div class="servers">
+        <div class="function">
+            <button class="btn btn-default">添加主机</button>
+            <div class="search from-group col-md-3">
+                <input class="form-control" type="text" placeholder="搜索主机名或IP" />
+            </div>
+        </div>
+        <div class="server-list">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>主机</th>
+                        <th>状态</th>
+                        <th>IP</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
