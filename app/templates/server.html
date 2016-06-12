@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 {% block link %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
 {% endblock %}
@@ -8,25 +9,62 @@
     </div>
     <div class="servers">
         <div class="function">
-            <button class="btn btn-default">添加主机</button>
+            <button class="btn btn-default" data-toggle="modal" data-target="#serverModal">添加主机</button>
             <div class="search from-group col-md-3">
                 <input class="form-control" type="text" placeholder="搜索主机名或IP"/>
             </div>
         </div>
-        <div class="server-list">
-            <table class="table">
+        <div class="server-list ">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th>主机</th>
-                    <th>状态</th>
                     <th>IP</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-
+                {% for server in servers %}
+                    <tr>
+                        <td>{{ server.nickname }}</td>
+                        <td>{{ server.Ip }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.add_server') }}
+        </div>
     </div>
+    <div class="modal fade" id="serverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">主机信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="">主机名称</label>
+                            {{ form.nickname(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            <label for="">主机IP</label>
+                            {{ form.ip(class="form-control") }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
