@@ -39,6 +39,11 @@ body {
 .nav > .active > a > span {
     color: #fff;
 }
+
+.nav > .logout {
+    margin-top: 100%;
+}
+
 .side-content {
     margin-left: 100px;
     height: 100%;

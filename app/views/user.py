@@ -49,7 +49,7 @@ def create_user():
             flash(u'邮箱已被使用')
             return redirect(url_for('create_user'))
         if UserService.get_user_by_username(username) is not None:
-            flash(u'用户名已被使用')
+            flash(u'用户名已被使用', 'warning')
             return redirect(url_for('create_user'))
         user = UserModel(
             username=username,
@@ -58,7 +58,7 @@ def create_user():
         user.password = password
         db.session.add(user)
         db.session.commit()
-        flash(u'用户添加成功')
+        flash(u'用户添加成功', 'success')
         redirect(url_for('create_user'))
 
     return render_template('register.html', form=form)
@@ -73,9 +73,9 @@ def login():
         user = UserService.get_user(username_or_email)
         if user is not None and user.verify_password(password):
             login_user(user)
-            flash(u'登录成功')
+            flash(u'登录成功', 'success')
             return redirect(url_for('index'))
-        flash(u'登录失败')
+        flash(u'用户名或密码错误', 'danger')
         return redirect(url_for('login'))
     return render_template("login.html", form=form)
 

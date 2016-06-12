@@ -20,19 +20,6 @@
 </head>
 <body>
 <div class="container-fluid">
-    {% block messages %}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-success alert-dismissible" role="alert" style="margin-top: 10px">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    {% endblock %}
     <div class="side-nav">
         <ul class="nav" id="menu">
             <li>
@@ -53,14 +40,31 @@
             <li>
                 <a href="/profile"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
             </li>
+            <li class="logout">
+                <a href="/logout"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+            </li>
         </ul>
     </div>
     <div class="side-content">
+        <div class="alert-msg">
+            {% block messages %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible" role="alert" style="margin-top: 10px">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            {% endblock %}
+        </div>
         {% block page_content %}{% endblock %}
     </div>
     <script>
         var url = document.location.href;
-        console.log();
         var menu = document.getElementById('menu');
         var links = menu.getElementsByTagName('li');
 

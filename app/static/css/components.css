@@ -1,0 +1,118 @@
+html {
+    font-size: 10px;
+}
+/* 服务器部分 */
+.top-name {
+    padding: 0 15px;
+    margin-top: 20px;
+    color: #555;
+    font-size: 1.8rem;
+}
+
+.servers {
+    max-width: 1150px;
+    background-color: #fff;
+}
+
+.servers > h3 {
+    font-size: 2.4rem;
+    border-radius: 4px;
+}
+
+.function {
+    width: 100%;
+    margin-top: 30px;
+    padding: 6px 15px;
+    height: 50px;
+}
+
+.btn {
+    float: left;
+}
+
+.search {
+    float: left;
+    margin-left: 20px;
+}
+
+.server-list {
+    padding: 20px 10px;
+}
+
+.server-list > table > thead {
+    font-size: 12px;
+    color: #9ba3af;
+}
+
+
+/* 登录部分 */
+.login-box {
+	width: 100%;
+	max-width:500px;
+	height: 400px;
+	position: absolute;
+	top: 50%;
+
+	margin-top: 150px;
+	/*设置负值，为要定位子盒子的一半高度*/
+
+}
+
+@media screen and (min-width:500px){
+	.login-box {
+		left: 50%;
+		/*设置负值，为要定位子盒子的一半宽度*/
+		margin-left: -250px;
+	}
+}
+
+.form {
+	width: 100%;
+	max-width:500px;
+	height: 275px;
+	margin: 25px auto 0px auto;
+	padding-top: 25px;
+}
+
+.login-content {
+	height: 300px;
+	width: 100%;
+	max-width:500px;
+	background-color: rgba(255, 250, 2550, .6);
+	float: left;
+}
+
+.input-group {
+	margin: 0px 0px 30px 0px !important;
+}
+
+.form-control > .input-group {
+	height: 40px;
+}
+
+.form-group {
+	margin-bottom: 0px !important;
+}
+
+.login-title {
+	padding: 20px 10px;
+	background-color: rgba(0, 0, 0, .6);
+}
+
+.login-title > h1 {
+	margin-top: 10px !important;
+}
+
+.login-title small {
+	color: #fff;
+}
+
+.link > p {
+	line-height: 20px;
+	margin-top: 30px;
+}
+
+.btn-sm {
+	padding: 8px 24px !important;
+	font-size: 16px !important;
+}
