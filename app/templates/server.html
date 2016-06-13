@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="server-list ">
-            <table class="table table-hover">
+            <table class="table table-hover" id="table">
                 <thead>
                 <tr>
                     <th>主机</th>
@@ -67,4 +67,32 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <script>
+            $(document).ready(function () {
+                var data = {};
+                var trs = document.getElementsByTagName("tbody")[0].children;
+                for (var i = 0; i < trs.length; i++) {
+                    data[i] = trs[i].getElementsByTagName('td')[1].innerText;
+                    trs[i].getElementsByTagName('td')[2].innerHTML = '<img src="{{ url_for('static', filename='img/loading.gif') }}">';
+                }
+                console.log(data);
+                $.ajax({
+                    url: '/server/ping',
+                    type: 'post',
+                    dataType: 'json',
+                    data: JSON.stringify({data: data}),
+                    success: function (data) {
+                        for (var i in data) {
+                            if (data[i] == 0) {
+                                trs[i].getElementsByTagName('td')[2].className = 'green';
+                                trs[i].getElementsByTagName('td')[2].innerText = '正常';
+                            } else {
+                                trs[i].getElementsByTagName('td')[2].className = 'red';
+                                trs[i].getElementsByTagName('td')[2].innerText = '连接失败';
+                            }
+                        }
+                    }
+                })
+            });
+    </script>
 {% endblock %}

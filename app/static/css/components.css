@@ -54,6 +54,14 @@ html {
 	padding: 20px 10px;
 }
 
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
 /* 登录部分 */
 .login-box {
 	width: 100%;

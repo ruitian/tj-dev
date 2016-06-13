@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import os
 from flask import \
     (
         render_template,
         request,
         flash,
         redirect,
-        url_for
+        url_for,
+        json,
+        jsonify
     )
-from flask_socketio import send, emit
+from flask_socketio import emit
 from flask_login import login_required
 
 from app import app, socketio, db
@@ -15,8 +18,10 @@ from app.forms import ServerForm
 from app.models import ServerModel
 
 
-class ServerService(object):
+IP_LISTS = []
 
+
+class ServerService(object):
     @staticmethod
     def get_server_by_nickname(nickname):
         return ServerModel.query.filter_by(nickname=nickname).first()
@@ -29,22 +34,7 @@ class ServerService(object):
     def get_servers(page):
         return ServerModel.query.order_by(
             ServerModel.create_on.desc()).paginate(
-                page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
-
-
-@app.route('/test')
-def test():
-    return render_template('test.html')
-
-
-def ask():
-    print 'it has recived'
-
-
-@socketio.on('my event')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
-    return 'one', 2
+            page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
 
 
 @app.route('/server', methods=['GET', 'POST'])
@@ -69,3 +59,18 @@ def add_server():
     pagination = ServerService.get_servers(page)
     servers = pagination.items
     return render_template('server.html', form=form, servers=servers, pagination=pagination)
+
+
+@app.route('/server/ping', methods=['POST'])
+@login_required
+def ping_server():
+    if request.method == 'POST':
+        rsp = {}
+        ip = json.loads(request.get_data())
+        for i in range(len(ip['data'])):
+            rsp[str(i)] = test_ping(ip['data'][str(i)])
+        return json.dumps(rsp)
+
+
+def test_ping(ip):
+    return os.system('ping -c 1 -t 1 ' + ip)
