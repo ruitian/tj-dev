@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY = 'you-will-never-guess'
     CSRF_ENABLED = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    FLASKY_POSTS_PER_PAGE = 10
+    FLASKY_POSTS_PER_PAGE = 5
 
     @staticmethod
     def init_app(app):
