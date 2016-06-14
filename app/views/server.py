@@ -58,7 +58,8 @@ def add_server():
     page = request.args.get('page', 1, type=int)
     pagination = ServerService.get_servers(page)
     servers = pagination.items
-    return render_template('server.html', form=form, servers=servers, pagination=pagination)
+    return render_template('server.html',
+                           form=form, servers=servers, pagination=pagination)
 
 
 @app.route('/server/ping', methods=['POST'])
