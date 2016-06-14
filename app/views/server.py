@@ -75,7 +75,6 @@ def ping_server():
             if resp_num == 0:
                 if not check_docker(ip['data'][str(i)]):
                     rsp[str(i)] = 'false'
-        print json.dumps(rsp)
         return json.dumps(rsp)
 
 
