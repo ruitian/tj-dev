@@ -17,6 +17,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'mysql://root:password@127.0.0.1/tj'
+    REDIS_URL = 'redis://127.0.0.1:6379/0'
 
 
 config = {
