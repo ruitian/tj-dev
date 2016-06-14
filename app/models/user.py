@@ -21,6 +21,7 @@ class UserModel(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(256))
+    github_token = db.Column(db.String(526), default=None)
     # 用户角色
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
