@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_socketio import SocketIO
+from flask_oauthlib.client import OAuth
 
 from .config import config
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 login_manager = LoginManager()
 db = SQLAlchemy()
 socketio = SocketIO()
+oauth = OAuth(app)
 
 with app.app_context():
 
