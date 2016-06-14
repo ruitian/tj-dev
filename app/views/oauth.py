@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import url_for, session, jsonify
+from flask import url_for, session, jsonify, redirect
 from flask_login import current_user
 
 from app import app, db
@@ -20,9 +20,9 @@ def authorized():
     current_user.github_token = resp['access_token']
     db.session.add(current_user)
     db.session.commit()
-    return jsonify(GithubOAuth.github.get('user').data)
+    return redirect(url_for('build_code_new'))
 
 
 @GithubOAuth.github.tokengetter
 def get_github_oauth_token():
-    return session.get('github_token')
+    return (current_user.github_token, '')

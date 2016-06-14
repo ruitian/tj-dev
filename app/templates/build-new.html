@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
+{% endblock %}
+{% block page_content %}
+    <div class="top-name">
+        <span class="glyphicon glyphicon-menu-left" aria-label="Left Align"></span>
+        <a href="{{ url_for('build_code') }}">代码构建</a>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="" method="post">
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <label class="setting-label">项目名称</label>
+                        <div class="setting-info">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <lable class="setting-label">代码来源</lable>
+                        <div class="setting-info">
+                            <ul class="nav nav-tabs">
+                                <li role="presentation" class="active">
+                                    <a href="#github" aria-controls="github" role="tab" data-toggle="tab">github</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="table-panel active" id="github">
+                                    <div class="tab-pane tab-pane-attached">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="img"><img src="" alt=""></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
