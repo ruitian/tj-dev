@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_oauthlib.client import OAuth
 from flask_redis import Redis
+from docker import Client
 
 from .config import config
 
@@ -15,6 +16,7 @@ db = SQLAlchemy()
 socketio = SocketIO()
 oauth = OAuth(app)
 redis = Redis()
+client = Client()
 
 with app.app_context():
 
