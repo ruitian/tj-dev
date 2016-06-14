@@ -12,6 +12,7 @@ from flask import \
     )
 from flask_socketio import emit
 from flask_login import login_required
+from docker import Client
 
 from app import app, socketio, db
 from app.forms import ServerForm
@@ -58,7 +59,8 @@ def add_server():
     page = request.args.get('page', 1, type=int)
     pagination = ServerService.get_servers(page)
     servers = pagination.items
-    return render_template('server.html', form=form, servers=servers, pagination=pagination)
+    return render_template('server.html',
+                           form=form, servers=servers, pagination=pagination)
 
 
 @app.route('/server/ping', methods=['POST'])
@@ -68,9 +70,23 @@ def ping_server():
         rsp = {}
         ip = json.loads(request.get_data())
         for i in range(len(ip['data'])):
-            rsp[str(i)] = test_ping(ip['data'][str(i)])
+            resp_num = check_ping(ip['data'][str(i)])
+            rsp[str(i)] = resp_num
+            if resp_num == 0:
+                if not check_docker(ip['data'][str(i)]):
+                    rsp[str(i)] = 'false'
+        print json.dumps(rsp)
         return json.dumps(rsp)
 
 
-def test_ping(ip):
-    return os.system('ping -c 1 -t 1 ' + ip)
+def check_ping(ip):
+    return os.system('ping -c 1 -W 1 ' + ip)
+
+
+def check_docker(ip):
+    client = Client(base_url=ip+':5678')
+    try:
+        client.info()
+        return True
+    except Exception, e:
+        return False
