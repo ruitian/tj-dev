@@ -25,3 +25,133 @@
 .setting-section .setting-info {
     margin-left: 160px;
 }
+
+.info-section {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid #ecf0f1;
+}
+
+.info-section-avatar {
+    float: left;
+    width: 100px;
+    text-align: center;
+}
+
+.info-section-desc {
+    margin-left: 120px;
+    padding-top: 15px;
+}
+
+.tab-pane {
+    padding-bottom: 20px;
+}
+
+.tab-pane-attached{
+    padding-top: 40px;
+    position: relative;
+    border-style: none solid solid;
+    border-width: 0 1px 1px;
+    border-color: transparent #e5e5e5 #e5e5e5;
+}
+
+.sync-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.card .img {
+    text-align: center;
+    padding: 15px 10px;
+    height: 104px;
+}
+
+.row {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.card .img img {
+    max-width: 60px;
+    width: 40%;
+    display: block;
+    border-radius: 4px;
+    margin: 0 auto;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.card {
+    border:2px solid #e5e5e5;
+    border-radius: 3px;
+    display: block;
+}
+
+figure {
+    margin: 0!important;
+}
+
+.caption {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.card .gh-repos {
+    width: 100%;
+    padding: 0!important;
+    margin: 0!important;
+    position: absolute;
+    top: 105%;
+    right: -4px;
+    left: 0;
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: none;
+    border-width: 2px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 2px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    background-clip: padding-box;
+}
+
+.card .gh-repos li a {
+    color: #999;
+    padding: 6px 10px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    display: block;
+}
