@@ -2,13 +2,14 @@
 import urllib2
 import json
 from flask import url_for, session, redirect
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from app import app, db, redis
 from app.utils import GithubOAuth
 
 
 @app.route('/github/login')
+@login_required
 def github_login():
     return GithubOAuth.github.authorize(
         callback=url_for('github_authorized', _external=True)
@@ -16,6 +17,7 @@ def github_login():
 
 
 @app.route('/github/login/authorized')
+@login_required
 def github_authorized():
     resp = GithubOAuth.github.authorized_response()
     session['github_token'] = (resp['access_token'], '')
@@ -30,7 +32,8 @@ def github_authorized():
         current_user.id,
         'github_orgs_data',
         urllib2.urlopen(
-            'https://api.github.com/user/orgs?access_token=%s' % resp['access_token']).read()
+            'https://api.github.com/user/orgs?access_token=%s'
+            % resp['access_token']).read()
         )
     return redirect(url_for('build_code_new'))
 

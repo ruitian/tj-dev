@@ -15,7 +15,9 @@ def build_code():
 @app.route('/build/new')
 @login_required
 def build_code_new():
-    github_data = json.loads(redis.hget(current_user.id, 'github_data'))
+    github_data = redis.hget(current_user.id, 'github_data')
+    if github_data is not None:
+        github_data = json.loads(github_data)
     github_orgs_data = redis.hget(current_user.id, 'github_orgs_data')
     if github_orgs_data is not None:
         github_orgs_data = eval(github_orgs_data)

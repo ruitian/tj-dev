@@ -64,19 +64,21 @@
                                                         </figure>
                                                     </div>
                                                 </div>
-                                                {% for github_org_data in github_orgs_data %}
-                                                    <div class="col-md-4">
-                                                        <div class="dropdown">
-                                                            <figure class="card">
-                                                                <div class="img"><img src="{{ github_org_data['avatar_url'] }}" alt=""></div>
-                                                                <a href="" class="caption ng-binding" data-toggle="dropdown" mydropdown aria-expanded="false">
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </a>
-                                                                <ul class="dropdown-menu gh-repos ng-scope" style="max-height: 264px; overflow-y: scroll;"></ul>
-                                                            </figure>
+                                                {% if github_orgs_data != None %}
+                                                    {% for github_org_data in github_orgs_data %}
+                                                        <div class="col-md-4">
+                                                            <div class="dropdown">
+                                                                <figure class="card">
+                                                                    <div class="img"><img src="{{ github_org_data['avatar_url'] }}" alt=""></div>
+                                                                    <a href="" class="caption ng-binding" data-toggle="dropdown" mydropdown aria-expanded="false">
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu gh-repos ng-scope" style="max-height: 264px; overflow-y: scroll;"></ul>
+                                                                </figure>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
                                             </div>
                                         {% endif %}
                                     </div>

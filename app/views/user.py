@@ -78,4 +78,3 @@ def login():
         flash(u'用户名或密码错误', 'danger')
         return redirect(url_for('login'))
     return render_template("login.html", form=form)
-
