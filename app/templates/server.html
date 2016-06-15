@@ -86,7 +86,12 @@
                             if (data[i] == 0) {
                                 trs[i].getElementsByTagName('td')[2].className = 'green';
                                 trs[i].getElementsByTagName('td')[2].innerText = '正常';
-                            } else {
+                            }
+                            else if (data[i] == 'false') {
+                                trs[i].getElementsByTagName('td')[2].className = 'red';
+                                trs[i].getElementsByTagName('td')[2].innerText = '检查docker';
+                            }
+                            else {
                                 trs[i].getElementsByTagName('td')[2].className = 'red';
                                 trs[i].getElementsByTagName('td')[2].innerText = '连接失败';
                             }
