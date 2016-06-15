@@ -26,17 +26,17 @@ body {
     background: #3e474e;
 }
 
-.nav > li > a > span:hover {
+.nav > li > a > i:hover {
     color: #fff;
 }
 
-.nav > li > a > span {
+.nav > li > a > i {
     text-align: center;
     font-size: 2.5rem;
     color: #60676d;
 }
 
-.nav > .active > a > span {
+.nav > .active > a > i {
     color: #fff;
 }
 

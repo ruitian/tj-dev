@@ -7,6 +7,7 @@
     <title>智课-OAM</title>
     <!-- Bootstrap -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     {% block link %}
     {% endblock %}
@@ -25,25 +26,25 @@
     <div class="side-nav">
         <ul class="nav" id="menu">
             <li>
-                <a href="/"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></a>
+                <a href="/"><i class="fa fa-tachometer"></i></a>
             </li>
             <li>
-                <a href="/build"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></a>
+                <a href="/build"><i class="fa fa-wrench"></i></a>
             </li>
             <li>
-                <a href="/save"><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></a>
+                <a href="/save"><i class="fa fa-hdd-o fa-3x"></i></a>
             </li>
             <li>
-                <a href="/server"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span></a>
+                <a href="/server"><i class="fa fa-laptop"></i></a>
             </li>
             <li>
-                <a href="/list"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                <a href="/list"><i class="fa fa-list-alt"></i></a>
             </li>
             <li>
-                <a href="/profile"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <a href="/profile"><i class="fa fa-user"></i></a>
             </li>
             <li class="logout">
-                <a href="/logout"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+                <a href="/logout"><i class="fa fa-sign-out"></i></a>
             </li>
         </ul>
     </div>
