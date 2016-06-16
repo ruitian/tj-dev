@@ -48,32 +48,57 @@
                                             <span class="sync-button">
                                                 <i class="fa fa-md fa-refresh"></i>
                                             </span>
-                                            <div class="row">
-                                                <div class="col-md-4">
+                                            <div class="row" id="dropdown">
+                                                <div class="col-md-4 col-xs-6">
                                                     <div class="dropdown">
                                                         <figure class="card">
-                                                            <div class="img"><img src="{{ github_data['avatar_url'] }}" alt=""></div>
-                                                            <a href="" class="caption ng-binding" data-toggle="dropdown" mydropdown aria-expanded="false">
+                                                            <div class="img">
+                                                                <img src="{{ github_data['avatar_url'] }}" alt="">
+                                                                <div class="name"
+                                                                     tooltip="{{ github_data['login'] }}">{{ github_data['login'] }}</div>
+                                                            </div>
+                                                            <a href="" class="caption ng-binding" data-toggle="dropdown"
+                                                               mydropdown aria-expanded="false">
                                                                 <i class="fa fa-caret-down"></i>
                                                             </a>
-                                                            <ul class="dropdown-menu gh-repos ng-scope" style="max-height: 264px; overflow-y: scroll;">
-                                                                <li>
-                                                                    <a href="" class="ng-binding">Testing</a>
-                                                                </li>
+                                                            <ul class="dropdown-menu gh-repos ng-scope"
+                                                                style="max-height: 264px; overflow-y: scroll;">
+                                                                {% if github_user_repos != None %}
+                                                                    {% for github_user_repo in github_user_repos %}
+                                                                        <li>
+                                                                            <a class="ng-binding">{{ github_user_repo['name'] }}</a>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                {% endif %}
                                                             </ul>
                                                         </figure>
                                                     </div>
                                                 </div>
                                                 {% if github_orgs_data != None %}
                                                     {% for github_org_data in github_orgs_data %}
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-4 col-xs-6">
                                                             <div class="dropdown">
                                                                 <figure class="card">
-                                                                    <div class="img"><img src="{{ github_org_data['avatar_url'] }}" alt=""></div>
-                                                                    <a href="" class="caption ng-binding" data-toggle="dropdown" mydropdown aria-expanded="false">
+                                                                    <div class="img">
+                                                                        <img src="{{ github_org_data['avatar_url'] }}"
+                                                                             alt="">
+                                                                        <div class="name">{{ github_org_data['login'] }}</div>
+                                                                    </div>
+                                                                    <a href="" class="caption ng-binding"
+                                                                       data-toggle="dropdown" mydropdown
+                                                                       aria-expanded="false">
                                                                         <i class="fa fa-caret-down"></i>
                                                                     </a>
-                                                                    <ul class="dropdown-menu gh-repos ng-scope" style="max-height: 264px; overflow-y: scroll;"></ul>
+                                                                    <ul class="dropdown-menu gh-repos ng-scope"
+                                                                        style="max-height: 264px; overflow-y: scroll;">
+                                                                        {% if github_org_repos != None %}
+                                                                            {% for repo in github_org_repos[github_org_data["login"]] %}
+                                                                                <li>
+                                                                                    <a class="ng-binding">{{ repo['name'] }}</a>
+                                                                                </li>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </ul>
                                                                 </figure>
                                                             </div>
                                                         </div>
@@ -104,4 +129,16 @@
         </div>
     </div>
 
+    <script>
+    var test = null;
+        function getDataid(e) {
+            test = e.target.parentNode;
+            aa.className = 'card active';
+            if (e.target.parentNode.nodeName === 'LI') {
+                e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " " + '<i class="fa fa-caret-down"></i>';
+            }
+        }
+        var el = document.getElementById('dropdown');
+        el.addEventListener('click', getDataid.bind(this), false);
+    </script>
 {% endblock %}

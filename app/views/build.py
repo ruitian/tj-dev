@@ -5,6 +5,9 @@ from flask import render_template
 
 from app import app, redis
 
+false = False
+null = None
+true = True
 
 @app.route('/build')
 @login_required
@@ -15,16 +18,30 @@ def build_code():
 @app.route('/build/new')
 @login_required
 def build_code_new():
+    org_repos = {}
+    # github 中的个人数据
     github_data = redis.hget(current_user.id, 'github_data')
     if github_data is not None:
         github_data = json.loads(github_data)
+    # github个人的组织信息
     github_orgs_data = redis.hget(current_user.id, 'github_orgs_data')
     if github_orgs_data is not None:
         github_orgs_data = eval(github_orgs_data)
-
-    # github_avatar = github_data['avatar_url']
+    # 个人拥有的项目信息
+    github_user_repos = redis.hget(current_user.id, 'github_user_repos')
+    if github_user_repos is not None:
+        github_user_repos = eval(github_user_repos)
+    # 组织拥有的项目信息
+    if github_orgs_data is not None:
+        for github_org_data in github_orgs_data:
+            repo = eval(redis.hget(
+                current_user.id, github_org_data['login']
+                ))
+            org_repos[github_org_data['login']] = repo
     return render_template(
         'build-new.html',
         github_data=github_data,
-        github_orgs_data=github_orgs_data
-        )
+        github_orgs_data=github_orgs_data,
+        github_user_repos=github_user_repos,
+        github_org_repos=org_repos
+    )

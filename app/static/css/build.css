@@ -82,6 +82,17 @@
     margin: 0 auto;
 }
 
+.card .img .name {
+    text-align: center;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    margin: 5px auto 0;
+}
+
 .dropdown {
     position: relative;
 }
@@ -143,6 +154,11 @@ figure {
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
     background-clip: padding-box;
+}
+
+.card .gh-repos li {
+    padding: 0 !important;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .card .gh-repos li a {
