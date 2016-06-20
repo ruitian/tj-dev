@@ -123,7 +123,7 @@
                                             <span class="sync-button">
                                                 <i class="fa fa-md fa-refresh"></i>
                                             </span>
-                                            <div class="row" id="dropdown">
+                                            <div class="row">
                                                 <div class="col-md-4 col-xs-6">
                                                     <div class="dropdown">
                                                         <figure class="card">
@@ -172,7 +172,18 @@
                 e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " " + '<i class="fa fa-caret-down"></i>';
             }
         }
+
         var el = document.getElementById('dropdown');
+        var card = el.getElementsByClassName('card');
+        for(var i=0;i<card.length;i++){
+            card[i].onclick = function(){
+              for(var j=0;j<card.length;j++){
+                card[j].className = "card"
+              }
+              this.className = 'card current';
+          }
+        }
         el.addEventListener('click', getDataid.bind(this), false);
+        
     </script>
 {% endblock %}
