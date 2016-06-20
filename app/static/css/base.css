@@ -47,4 +47,5 @@ body {
 .side-content {
     margin-left: 100px;
     height: 100%;
+    max-width: 1150px;
 }
