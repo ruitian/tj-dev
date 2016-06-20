@@ -38,10 +38,24 @@ def build_code_new():
                 current_user.id, github_org_data['login']
                 ))
             org_repos[github_org_data['login']] = repo
+
+    '''以下是gitlab数据'''
+    # gitlab 个人数据
+    gitlab_data = redis.hget(current_user.id, 'gitlab_data')
+    if gitlab_data is not None:
+        gitlab_data = json.loads(gitlab_data)
+    # gitlab 个人项目
+    gitlab_user_repos = redis.hget(current_user.id, 'gitlab_user_repos')
+    if gitlab_user_repos is not None:
+        gitlab_user_repos = eval(gitlab_user_repos)
+
     return render_template(
         'build-new.html',
         github_data=github_data,
         github_orgs_data=github_orgs_data,
         github_user_repos=github_user_repos,
-        github_org_repos=org_repos
+        github_org_repos=org_repos,
+
+        gitlab_data=gitlab_data,
+        gitlab_user_repos=gitlab_user_repos
     )

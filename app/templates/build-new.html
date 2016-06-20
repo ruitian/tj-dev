@@ -27,7 +27,7 @@
                                     <a href="#github" aria-controls="github" role="tab" data-toggle="tab">Github</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#coding" aria-controls="coding" role="tab" data-toggle="tab">Coding</a>
+                                    <a href="#coding" aria-controls="coding" role="tab" data-toggle="tab">Gitlab</a>
                                 </li>
                             </ul>
 
@@ -110,14 +110,46 @@
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="coding">
                                     <div class="tab-pane tab-pane-attached">
-                                        <div class="info-section">
-                                            <div class="info-section-avatar">
-                                                <i class="fa fa-code-fork fa-4x"></i>
+                                        {% if current_user.gitlab_token == None %}
+                                            <div class="info-section">
+                                                <div class="info-section-avatar">
+                                                    <i class="fa fa-gitlab fa-4x"></i>
+                                                </div>
+                                                <div class="info-section-desc">
+                                                    <a href="{{ url_for('gitlab_login') }}" class="btn btn-success">同步代码源</a>
+                                                </div>
                                             </div>
-                                            <div class="info-section-desc">
-                                                <a href="#" class="btn btn-success">同步代码源</a>
-                                            </div>
-                                        </div>
+                                        {% elif current_user.gitlab_token %}
+                                            <span class="sync-button">
+                                                <i class="fa fa-md fa-refresh"></i>
+                                            </span>
+                                            <div class="row" id="dropdown">
+                                                <div class="col-md-4 col-xs-6">
+                                                    <div class="dropdown">
+                                                        <figure class="card">
+                                                            <div class="img">
+                                                                <img src="{{ gitlab_data['avatar_url'] }}" alt="">
+                                                                <div class="name"
+                                                                     tooltip="{{ gitlab_data['username'] }}">{{ gitlab_data['username'] }}</div>
+                                                            </div>
+                                                            <a href="" class="caption ng-binding" data-toggle="dropdown"
+                                                               mydropdown aria-expanded="false">
+                                                                <i class="fa fa-caret-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu gh-repos ng-scope"
+                                                                style="max-height: 264px; overflow-y: scroll;">
+                                                                {% if gitlab_user_repos != None %}
+                                                                    {% for gitlab_user_repo in gitlab_user_repos %}
+                                                                        <li>
+                                                                            <a class="ng-binding">{{ gitlab_user_repo['name'] }}</a>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                            </ul>
+                                                        </figure>
+                                                    </div>
+                                                </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -130,10 +162,9 @@
     </div>
 
     <script>
-    var test = null;
+        var test = null;
         function getDataid(e) {
             test = e.target.parentNode;
-            aa.className = 'card active';
             if (e.target.parentNode.nodeName === 'LI') {
                 e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " " + '<i class="fa fa-caret-down"></i>';
             }
