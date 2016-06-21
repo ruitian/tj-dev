@@ -123,7 +123,7 @@
                                             <span class="sync-button">
                                                 <i class="fa fa-md fa-refresh"></i>
                                             </span>
-                                            <div class="row">
+                                            <div class="row" id="dropdown2">
                                                 <div class="col-md-4 col-xs-6">
                                                     <div class="dropdown">
                                                         <figure class="card">
@@ -165,25 +165,59 @@
     </div>
 
     <script>
+        // 此处的函数只是为了区分哪里是被选中的部分,js基础不好,代码很挫,以后重构的关键
         var test = null;
+        var idName = 'dropdown'
         function getDataid(e) {
             test = e.target.parentNode;
             if (e.target.parentNode.nodeName === 'LI') {
-                e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " " + '<i class="fa fa-caret-down"></i>';
+                e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " "
+                        + '<i class="fa fa-caret-down"></i>';
             }
         }
 
-        var el = document.getElementById('dropdown');
-        var card = el.getElementsByClassName('card');
-        for(var i=0;i<card.length;i++){
-            card[i].onclick = function(){
-              for(var j=0;j<card.length;j++){
-                card[j].className = "card"
-              }
-              this.className = 'card current';
-          }
+        function clear(el) {
+            var card = el.getElementsByClassName('card');
+            for (var i=0; i<card.length; i++) {
+                card[i].className = 'card';
+            }
         }
-        el.addEventListener('click', getDataid.bind(this), false);
-        
+
+        function changeClass(el) {
+            var card = el.getElementsByClassName('card');
+            for (var i=0; i<card.length; i++) {
+                card[i].onclick = function () {
+                    for (var j=0; j<card.length; j++) {
+                        card[j].className = "card"
+                    }
+                    this.className = 'card current';
+                }
+            }
+        }
+
+        function change(el) {
+            if (flag.id == el.id) {
+                changeClass(el);
+            } else {
+                clear(flag);
+                changeClass(el);
+                flag = el;
+            }
+        }
+
+        var el1 = document.getElementById('dropdown');
+        var el2 = document.getElementById('dropdown2');
+        var flag = el1;
+
+        el1.onclick = function () {
+            change(el1);
+        };
+        el2.onclick = function () {
+            change(el2);
+        };
+
+        el1.addEventListener('click', getDataid.bind(this), false);
+        el2.addEventListener('click', getDataid.bind(this), false);
+
     </script>
 {% endblock %}
