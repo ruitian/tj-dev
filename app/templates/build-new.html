@@ -9,12 +9,12 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form action="" method="post">
+            <form>
                 <div class="setting-section">
                     <div class="col-md-9">
                         <label class="setting-label">项目名称</label>
                         <div class="setting-info">
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="appName" oninput="insert()">
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                     </div>
                 </div>
                 <div class="setting-section">
-                    <button class="btn btn-lg btn-block" aria-disabled="true" disabled="disabled">开始创建</button>
+                    <input type="button" class="btn btn-lg btn-block" aria-disabled="true" disabled="disabled" value="创建应用" onclick="createApp()">
                 </div>
             </form>
         </div>
@@ -167,7 +167,7 @@
     <script>
         // 此处的函数只是为了区分哪里是被选中的部分,js基础不好,代码很挫,以后重构的关键
         var test = null;
-        var idName = 'dropdown'
+        var idName = 'dropdown';
         function getDataid(e) {
             test = e.target.parentNode;
             if (e.target.parentNode.nodeName === 'LI') {
@@ -219,5 +219,33 @@
         el1.addEventListener('click', getDataid.bind(this), false);
         el2.addEventListener('click', getDataid.bind(this), false);
 
+        //点击按钮开始创建项目
+        var form  = document.getElementsByTagName('form');
+        function insert() {
+            var inputValue = form[0][0].value;
+            if (inputValue.length != 0) {
+                form[0][1].disabled = false;
+            } else{
+                form[0][1].disabled = true;
+            }
+        }
+
+        function createApp() {
+            var el = document.getElementsByClassName('current');
+            var appName = form[0][0].value;
+            var code = el[0].childNodes[3].innerText;
+            var data = {'proName': appName, 'code': code};
+            form[0].childNodes[5].innerHTML = '<button class="btn btn-lg btn-block" aria-disabled="true"><i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在创建应用</button>';
+
+            $.ajax({
+                url: '/create_project',
+                data: JSON.stringify(data),
+                type: 'post',
+                dataType: 'json',
+                success: function () {
+                    window.location.href='{{ url_for("index") }}';
+                }
+            })
+        };
     </script>
 {% endblock %}

@@ -8,6 +8,7 @@ class Config:
     CSRF_ENABLED = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     FLASKY_POSTS_PER_PAGE = 5
+    CODE_FOLDER = BASE_DIR + '/code'
 
     @staticmethod
     def init_app(app):

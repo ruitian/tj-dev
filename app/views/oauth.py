@@ -8,6 +8,9 @@ from flask_login import current_user, login_required
 from app import app, db, redis
 from app.utils import GithubOAuth, GitlabOAuth
 
+false = False
+null = None
+true = True
 
 @app.route('/github/login')
 @login_required
@@ -35,29 +38,37 @@ def github_authorized():
         current_user.id,
         'github_orgs_data',
         urllib2.urlopen(
-            'https://api.github.com/user/orgs?access_token=%s&per_page=100'
-            % resp['access_token']).read()
+            'https://api.github.com/user/orgs?access_token=%s&per_page=100' % resp['access_token']).read()
         )
     # 缓存个人项目信息
     redis.hset(
         current_user.id,
         'github_user_repos',
         urllib2.urlopen(
-            'https://api.github.com/user/repos?access_token=%s\
-            &type=owner&per_page=100'
-            % resp['access_token']).read()
+            'https://api.github.com/user/repos?access_token=%s&type=owner&per_page=100' % resp['access_token']).read()
         )
     # 缓存组织的项目信息
     github_orgs_data = redis.hget(current_user.id, 'github_orgs_data')
     if github_orgs_data is not None:
         github_orgs_data = eval(github_orgs_data)
         for github_org_data in github_orgs_data:
-            print type(github_org_data)
             redis.hset(
                 current_user.id,
                 github_org_data['login'],
-                urllib2.urlopen(github_org_data['repos_url']
-                                + '?per_page=100').read()
+                urllib2.urlopen(github_org_data['repos_url'] + '?per_page=100').read()
+                )
+    # 目前只是缓存所有的个人项目,其中包括组织中的所有项目，key 为项目的名称
+    github_user_repos = redis.hget(
+        current_user.id,
+        'github_user_repos'
+        )
+    if github_user_repos is not None:
+        github_user_repos = eval(github_user_repos)
+        for github_user_repo in github_user_repos:
+            redis.hset(
+                current_user.id,
+                github_user_repo['name'],
+                github_user_repo['clone_url']
                 )
     return redirect(url_for('build_code_new'))
 
@@ -82,10 +93,10 @@ def gitlab_authorized():
     back_url = 'http://127.0.0.1:5000/gitlab/login/authorized'
     code = request.args.get('code')
     data = {
-        'client_id': '66dcd9cea621513f6ed2b0ee7bd84eb32fb55\
-        9ee3a7d4b4a63c38d61103d0bfa',
-        'client_secret': 'c5043ac0701b80b880fd1e6c81feff2c7\
-        85a8024e09e1c370df00136204cd7dc',
+        'client_id':
+            '66dcd9cea621513f6ed2b0ee7bd84eb32fb559ee3a7d4b4a63c38d61103d0bfa',
+        'client_secret':
+            'c5043ac0701b80b880fd1e6c81feff2c785a8024e09e1c370df00136204cd7dc',
         'code': code,
         'grant_type': 'authorization_code',
         'redirect_uri': back_url
@@ -113,6 +124,16 @@ def gitlab_authorized():
             % back_data['access_token']
             ).read()
         )
+    # 目前只是缓存所有的个人项目，key 为项目的名称
+    repos = urllib2.urlopen(
+        'https://gitlab.com/api/v3/projects?access_token=%s'
+        % back_data['access_token']
+        ).read()
+    if repos is not None:
+        repos = eval(repos)
+        for repo in repos:
+            redis.hset(
+                current_user.id, repo['name'], repo['http_url_to_repo'])
     return redirect(url_for('build_code_new'))
 
 

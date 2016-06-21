@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import json
+import subprocess
 from flask_login import login_required, current_user
-from flask import render_template
+from flask import render_template, request
 
-from app import app, redis
+from app import app, redis, db
+from app.models import ProjectModel
 
 false = False
 null = None
@@ -60,3 +62,25 @@ def build_code_new():
         gitlab_data=gitlab_data,
         gitlab_user_repos=gitlab_user_repos
     )
+
+
+@app.route('/create_project', methods=['POST'])
+@login_required
+def create_project():
+    data = json.loads(request.get_data())
+    code = str(data['code']).rstrip()
+    proName = str(data['proName'])
+    code_address = redis.hget(current_user.id, code)
+    application = ProjectModel.query.filter_by(proname=proName).first()
+    if application is not None:
+        return json.dumps({'msg': '应用名字重复'})
+    else:
+        application = ProjectModel(
+            proname=proName,
+            address=code_address
+            )
+        db.session.add(application)
+        db.session.commit()
+        c1 = subprocess.Popen('git clone '+code_address, cwd=app.config['CODE_FOLDER'], shell=True)
+        subprocess.Popen.wait(c1)
+        return json.dumps({'msg': 'ok'})
