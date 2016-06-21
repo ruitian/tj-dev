@@ -179,3 +179,20 @@ figure {
 }
 
 /*项目列表页*/
+
+
+/*项目详情页*/
+.panel .nav a:hover {
+    background-color: #FFFFFF;
+}
+
+.panel .nav .active a{
+    border: none;
+}
+
+.log-panel {
+    height: 300px;
+    padding: 20px;
+    background-color: #000;
+    color: #fff;
+}

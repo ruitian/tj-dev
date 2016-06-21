@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
+{% endblock %}
+
+{% block page_content %}
+    <div class="top-name">
+        <i class="fa fa-angle-left"></i>
+        <a href="{{ url_for('build_code') }}">代码构建</a>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <h1 style="font-size: 24px; margin-bottom: 10px">{{ project.proname }}</h1>
+                </div>
+            </div>
+            <div class="panel panel-body">
+                <div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#log" aria-controls="log" role="tab" data-toggle="tab">日志</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">设置</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="log">
+                            <div class="log-panel">
+                                html
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="settings">2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
