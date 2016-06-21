@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_oauthlib.client import OAuth
 from flask_redis import Redis
+from flask_moment import Moment
 
 from .config import config
 
@@ -15,6 +16,7 @@ db = SQLAlchemy()
 socketio = SocketIO()
 oauth = OAuth(app)
 redis = Redis()
+moment = Moment()
 
 with app.app_context():
 
@@ -33,6 +35,7 @@ with app.app_context():
 
     socketio.init_app(app)
     redis.init_app(app)
+    moment.init_app(app)
 
 from .views import *  # noqa
 from .models import *  # noqa

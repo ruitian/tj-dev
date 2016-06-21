@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 {% block link %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
 {% endblock %}
 {% block page_content %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
     <div class="top-name">
         代码构建
     </div>
@@ -11,6 +15,33 @@
             <a href='{{ url_for('build_code_new') }}' class="btn btn-default">创建应用</a>
             <div class="search from-group col-md-3">
                 <input class="form-control" type="text" placeholder=""/>
+            </div>
+        </div>
+        <div class="panel panel-body">
+            <div class="server-list">
+                <table class="table table-hover" id="table">
+                    <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>最近更新</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td>{{ project.proname }}</td>
+                            <td>{{ moment(project.create_on).fromNow(refresh = true) }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                {{ macros.pagination_widget(pagination, '.build_code') }}
             </div>
         </div>
     </div>

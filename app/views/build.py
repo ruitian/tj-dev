@@ -15,7 +15,12 @@ true = True
 @app.route('/build')
 @login_required
 def build_code():
-    return render_template('build.html')
+    page = request.args.get('page', 1, type=int)
+    pagination = ProjectModel.query.order_by(
+        ProjectModel.create_on.desc()).paginate(
+            page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+    projects = pagination.items
+    return render_template('build.html', projects=projects, pagination=pagination)
 
 
 @app.route('/build/new')
