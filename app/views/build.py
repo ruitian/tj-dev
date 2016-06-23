@@ -112,7 +112,7 @@ def get_log(json):
     dockerfile = BytesIO(dockerfile)
     cli = Client(base_url='127.0.0.1:5678')
     for line in cli.build(
-        fileobj=dockerfile, tag=current_user.username+'/'+json['data']):
+        fileobj=dockerfile, tag=json['data']):
         if 'stream' in eval(line):
             socketio.emit('response', {'resp': eval(line)})
         elif 'errorDetail' in eval(line):
