@@ -242,8 +242,8 @@
                 data: JSON.stringify(data),
                 type: 'post',
                 dataType: 'json',
-                success: function () {
-                    window.location.href='{{ url_for("index") }}';
+                success: function (data) {
+                    window.location.href='/build/new/'+data['verify'];
                 }
             })
         };
