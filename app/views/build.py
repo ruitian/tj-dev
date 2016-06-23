@@ -105,21 +105,20 @@ def per_project(verify):
     project = ProjectModel.query.filter_by(verify=verify).first()
     return render_template('project.html', project=project)
 
+
 @socketio.on('build project')
 def get_log(json):
-    dockerfile = (
-        open(app.config['CODE_FOLDER'] + '/' + json['data'] + '/Dockerfile')).read()
-    dockerfile = BytesIO(dockerfile)
+    os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
     cli = Client(base_url='127.0.0.1:5678')
-    for line in cli.build(
-        fileobj=dockerfile, tag=json['data']):
+    for line in cli.build(path=os.getcwd(),
+                          tag=str(current_user.username+'/'+json['data'])):
         if 'stream' in eval(line):
             socketio.emit('response', {'resp': eval(line)})
         elif 'errorDetail' in eval(line):
             socketio.emit(
-                    'response',
-                    {
-                        'resp': eval(line)['errorDetail']
-                    }
-                )
-        time.sleep(0.5)
+                'response', {
+                    'resp': eval(line)['errorDetail']
+                }
+            )
+        elif 'status' in eval(line):
+            socketio.emit('response', {'resp': eval(line)})
