@@ -2,53 +2,51 @@
  * Created by mac on 16/6/23.
  */
 
-window.onload = function () {
-
 // 此处的函数只是为了区分哪里是被选中的部分,js基础不好,代码很挫,以后重构的关键
-    var test = null;
-    var idName = 'dropdown';
+var test = null;
+var idName = 'dropdown';
 
-    function getDataid(e) {
-        test = e.target.parentNode;
-        if (e.target.parentNode.nodeName === 'LI') {
-            e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " "
-                + '<i class="fa fa-caret-down"></i>';
-        }
-    };
+function getDataid(e) {
+    test = e.target.parentNode;
+    if (e.target.parentNode.nodeName === 'LI') {
+        e.target.parentNode.parentNode.parentNode.childNodes[3].innerHTML = e.target.innerText + " "
+            + '<i class="fa fa-caret-down"></i>';
+    }
+};
 
-    function clear(el) {
-        var card = el.getElementsByClassName('card');
-        for (var i = 0; i < card.length; i++) {
-            card[i].className = 'card';
-        }
-    };
+function clear(el) {
+    var card = el.getElementsByClassName('card');
+    for (var i = 0; i < card.length; i++) {
+        card[i].className = 'card';
+    }
+};
 
-    function changeClass(el) {
-        var card = el.getElementsByClassName('card');
-        for (var i = 0; i < card.length; i++) {
-            card[i].onclick = function () {
-                for (var j = 0; j < card.length; j++) {
-                    card[j].className = "card"
-                }
-                this.className = 'card current';
+function changeClass(el) {
+    var card = el.getElementsByClassName('card');
+    for (var i = 0; i < card.length; i++) {
+        card[i].onclick = function () {
+            for (var j = 0; j < card.length; j++) {
+                card[j].className = "card"
             }
+            this.className = 'card current';
         }
-    };
+    }
+};
 
-    function change(el) {
-        if (flag.id == el.id) {
-            changeClass(el);
-        } else {
-            clear(flag);
-            changeClass(el);
-            flag = el;
-        }
-    };
+function change(el) {
+    if (flag.id == el.id) {
+        changeClass(el);
+    } else {
+        clear(flag);
+        changeClass(el);
+        flag = el;
+    }
+};
 
+window.onload = function () {
     var el1 = document.getElementById('dropdown');
     var el2 = document.getElementById('dropdown2');
     var flag = el1;
-
     el1.onclick = function () {
         change(el1);
     };
@@ -59,7 +57,10 @@ window.onload = function () {
 
     el1.addEventListener('click', getDataid.bind(this), false);
     el2.addEventListener('click', getDataid.bind(this), false);
+};
 
+
+window.onload = function () {
 //点击按钮开始创建项目
     var form = document.getElementsByTagName('form');
 
@@ -71,7 +72,9 @@ window.onload = function () {
             form[0][1].disabled = true;
         }
     };
+};
 
+window.onload = function () {
     function createApp() {
         var el = document.getElementsByClassName('current');
         var appName = form[0][0].value;
