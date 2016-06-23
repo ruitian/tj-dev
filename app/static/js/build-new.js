@@ -43,53 +43,46 @@ function change(el) {
     }
 };
 
-window.onload = function () {
-    var el1 = document.getElementById('dropdown');
-    var el2 = document.getElementById('dropdown2');
-    var flag = el1;
-    el1.onclick = function () {
-        change(el1);
-    };
-
-    el2.onclick = function () {
-        change(el2);
-    };
-
-    el1.addEventListener('click', getDataid.bind(this), false);
-    el2.addEventListener('click', getDataid.bind(this), false);
+var el1 = document.getElementById('dropdown');
+var el2 = document.getElementById('dropdown2');
+var flag = el1;
+el1.onclick = function () {
+    change(el1);
 };
 
+el2.onclick = function () {
+    change(el2);
+};
 
-window.onload = function () {
+el1.addEventListener('click', getDataid.bind(this), false);
+el2.addEventListener('click', getDataid.bind(this), false);
+
+
 //点击按钮开始创建项目
-    var form = document.getElementsByTagName('form');
-
-    function insert() {
-        var inputValue = form[0][0].value;
-        if (inputValue.length != 0) {
-            form[0][1].disabled = false;
-        } else {
-            form[0][1].disabled = true;
-        }
-    };
+var form = document.getElementsByTagName('form');
+function insert() {
+    var inputValue = form[0][0].value;
+    if (inputValue.length != 0) {
+        form[0][1].disabled = false;
+    } else {
+        form[0][1].disabled = true;
+    }
 };
 
-window.onload = function () {
-    function createApp() {
-        var el = document.getElementsByClassName('current');
-        var appName = form[0][0].value;
-        var code = el[0].childNodes[3].innerText;
-        var data = {'proName': appName, 'code': code};
-        form[0].childNodes[5].innerHTML = '<button class="btn btn-lg btn-block" aria-disabled="true"><i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在创建应用</button>';
+function createApp() {
+    var el = document.getElementsByClassName('current');
+    var appName = form[0][0].value;
+    var code = el[0].childNodes[3].innerText;
+    var data = {'proName': appName, 'code': code};
+    form[0].childNodes[5].innerHTML = '<button class="btn btn-lg btn-block" aria-disabled="true"><i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在创建应用</button>';
 
-        $.ajax({
-            url: '/create_project',
-            data: JSON.stringify(data),
-            type: 'post',
-            dataType: 'json',
-            success: function (data) {
-                window.location.href = '/build/new/' + data['verify'];
-            }
-        })
-    };
+    $.ajax({
+        url: '/create_project',
+        data: JSON.stringify(data),
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            window.location.href = '/build/new/' + data['verify'];
+        }
+    })
 };
