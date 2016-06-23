@@ -4,6 +4,10 @@
 
 // 此处的函数只是为了区分哪里是被选中的部分,js基础不好,代码很挫,以后重构的关键
 var test = null;
+var form = document.getElementsByTagName('form');
+var el1 = document.getElementById('dropdown');
+var el2 = document.getElementById('dropdown2');
+var flag = el1;
 
 function getDataid(e) {
     test = e.target.parentNode;
@@ -12,9 +16,6 @@ function getDataid(e) {
             + '<i class="fa fa-caret-down"></i>';
     }
 };
-var el1 = document.getElementById('dropdown');
-var el2 = document.getElementById('dropdown2');
-var flag = el1;
 
 el1.addEventListener('click', getDataid.bind(this), false);
 el2.addEventListener('click', getDataid.bind(this), false);
@@ -26,6 +27,7 @@ function clear(el) {
     }
 };
 
+//改变选中的className
 function changeClass(el) {
     var card = el.getElementsByClassName('card');
     for (var i = 0; i < card.length; i++) {
@@ -37,7 +39,7 @@ function changeClass(el) {
         }
     }
 };
-
+// 调用changeClass()
 function change(el) {
     if (flag.id == el.id) {
         changeClass(el);
@@ -59,7 +61,6 @@ el2.onclick = function () {
 
 
 //点击按钮开始创建项目
-var form = document.getElementsByTagName('form');
 function insert() {
     var inputValue = form[0][0].value;
     if (inputValue.length != 0) {
