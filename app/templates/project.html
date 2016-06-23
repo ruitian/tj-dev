@@ -12,7 +12,7 @@
         <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel panel-body">
-                    <h1 style="font-size: 24px; margin-bottom: 10px">{{ project.proname }}</h1>
+                    <h1 style="font-size: 24px; margin-bottom: 10px" id="proName">{{ project.proname }}</h1>
                 </div>
             </div>
             <div class="panel panel-body">
@@ -30,8 +30,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="log">
-                            <div class="log-panel">
-                                html
+                            <div class="log-panel" id="log-content">
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="settings">2</div>
@@ -40,4 +39,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function () {
+            var proname = document.getElementById('proName').innerText;
+            socket.emit('build project', {data: proname});
+        });
+        socket.on('response', function (msg) {
+            if (msg.resp.hasOwnProperty('stream')) {
+                var text = msg.resp['stream'];
+            } else {
+                var text = msg.resp['message'];
+            }
+            var r = /\\u([\d\w]{4})/gi;
+            text = text.replace(r, function (match, grp) {
+                return String.fromCharCode(parseInt(grp, 16));
+            });
+            console.log(msg.resp);
+            document.getElementById('log-content').innerText += text;
+        });
+    </script>
 {% endblock %}

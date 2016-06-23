@@ -2,10 +2,13 @@
 import os
 import json
 import subprocess
+import time
 from flask_login import login_required, current_user
 from flask import render_template, request
+from docker import Client
+from io import BytesIO
 
-from app import app, redis, db
+from app import app, redis, db, socketio
 from app.models import ProjectModel
 
 false = False
@@ -97,7 +100,26 @@ def create_project():
         return json.dumps({'msg': 'ok', 'verify': project.verify})
 
 
-@app.route('/create_project/<verify>')
+@app.route('/build/new/<verify>')
 def per_project(verify):
     project = ProjectModel.query.filter_by(verify=verify).first()
     return render_template('project.html', project=project)
+
+@socketio.on('build project')
+def get_log(json):
+    dockerfile = (
+        open(app.config['CODE_FOLDER'] + '/' + json['data'] + '/Dockerfile')).read()
+    dockerfile = BytesIO(dockerfile)
+    cli = Client(base_url='127.0.0.1:5678')
+    for line in cli.build(
+        fileobj=dockerfile, tag=current_user.username+'/'+json['data']):
+        if 'stream' in eval(line):
+            socketio.emit('response', {'resp': eval(line)})
+        elif 'errorDetail' in eval(line):
+            socketio.emit(
+                    'response',
+                    {
+                        'resp': eval(line)['errorDetail']
+                    }
+                )
+        time.sleep(0.5)
