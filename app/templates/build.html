@@ -5,9 +5,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
 {% endblock %}
 {% block page_content %}
-    {{ moment.include_jquery() }}
-    {{ moment.include_moment() }}
-    {{ moment.lang("zh-CN") }}
     <div class="top-name">
         代码构建
     </div>
@@ -51,7 +48,7 @@
                                     <div class="item-single-line item-danger">执行失败</div>
                                 {% endif %}
                             </td>
-                            <td><a href="">部署</a></td>
+                            <td><a href="{{ url_for('create_app', verify=project.verify) }}">部署</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

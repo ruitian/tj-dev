@@ -37,7 +37,7 @@
                 <a href="/server"><i class="fa fa-laptop"></i></a>
             </li>
             <li>
-                <a href="/list"><i class="fa fa-list-alt"></i></a>
+                <a href="/apps"><i class="fa fa-list-alt"></i></a>
             </li>
             <li>
                 <a href="/profile"><i class="fa fa-user"></i></a>
@@ -47,6 +47,10 @@
             </li>
         </ul>
     </div>
+
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang("zh-CN") }}
     <div class="side-content">
         <div class="alert-msg">
             {% block messages %}
