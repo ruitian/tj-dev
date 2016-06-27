@@ -215,3 +215,58 @@ a:hover {
     overflow: scroll;
     font:400 13px/125% Consolas,"source code pro",Bitstream Vera Sans Mono,Consolas,Courier,monospace;;
 }
+
+
+/*应用部分*/
+form .card {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+form .card .top {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+form .image {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* 应用详情页 */
+.title-img {
+    width: 120px;
+    float: left;
+    text-align: center;
+}
+
+.title-img span {
+    display: block;
+    width: 120px;
+    height: 120px;
+    padding: 20px;
+}
+
+.title-title {
+    margin-left: 135px;
+}
+
+.title-title h2 {
+    font-size: 24px;
+}
+
+.title-title, .sub-title {
+    font-size: 17px;
+}
+
+.text-muted {
+    color: #777;
+}
+
+.title-info {
+    font-size: 13px;
+}
+
+.text-muted .title-info-label {
+    margin-right: 10px;
+}

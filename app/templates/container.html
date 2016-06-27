@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
+{% endblock %}
+
+{% block  page_content %}
+    <div class="top-name">
+        应用列表
+    </div>
+    <div class="containers">
+        <div class="function">
+            <a href='{{ url_for('build_code') }}' class="btn btn-default">创建应用</a>
+            <div class="search from-group col-md-3">
+                <input class="form-control" type="text" placeholder=""/>
+            </div>
+        </div>
+        <div class="panel panel-body">
+            <div class="server-list">
+                <table class="table table-hover" id="table">
+                    <thead>
+                    <tr>
+                        <th>应用名称</th>
+                        <th>最近更新</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
+{% endblock %}
+
+{% block page_content %}
+    <div class="top-name">
+        <i class="fa fa-arrow-left"></i>
+        <a href="{{ url_for('apps') }}">应用详情</a>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel panel-body">
+            <div class="title-img">
+                <span><i class="fa fa-tags fa-4x" aria-hidden="true"></i></span>
+            </div>
+            <div class="title-title">
+                <h2>{{ apps.appname }}</h2>
+                <div class="text-muted sub-title">
+                    <span>部署于</span>
+                    {{ moment(apps.create_on).fromNow(no_suffix=false, refresh = true) }}
+                </div>
+                <hr>
+                <div class="title-info clearfix">
+                    <div class="text-muted">
+                        <div>
+                            <span class="title-info-label">所属镜像</span>
+                            <a href="#">{{ apps.image }}</a>
+                        </div>
+                        <div>
+                            <span class="title-info-label">所在环境</span>
+                            <a href="#">{{ apps.host }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

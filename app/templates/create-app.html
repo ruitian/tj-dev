@@ -1,10 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
+{% endblock %}
+
+{% block page_content %}
+    <div class="top-name">
+        <i class="fa fa-arrow-left" style="margin-right:5px"></i>
+        <a href="{{ url_for('build_code') }}">代码构建</a>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="{{ url_for('per_app', verify=app_verify) }}" method="post">
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <label class="setting-label">应用名称</label>
+                        <div class="setting-info">
+                            <input type="text" class="form-control" name="appname">
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <label class="setting-label">所属镜像</label>
+                        <div class="setting-info">
+                            <div class="col-xs-4 image">
+                                <div class="card">
+                                    <div class="top">
+                                        <i class="fa fa-cube fa-3x" aria-hidden="true"></i>
+                                    </div>
+                                    <input type="hidden" value="{{ project.proname }}" name="image">
+                                    <div>{{ project.proname }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <label class="setting-label">运行环境</label>
+                        <div class="setting-info">
+                            <select class="form-control" name="server">
+                                {% for server in servers %}
+                                    <option value="{{ server.Ip }}">{{ server.nickname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="col-md-9">
+                        <label class="setting-label">映射端口</label>
+                        <div class="setting-info">
+                            <input type="text" class="form-control" name="port">
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-block right">开始创建</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
