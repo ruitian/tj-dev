@@ -9,6 +9,7 @@ class ProjectModel(db.Model):
     address = db.Column(db.String(256), nullable=False, index=True)
     verify = db.Column(db.String(256), nullable=False, index=True)
     build = db.Column(db.Boolean, default=False)
+    success = db.Column(db.Integer, default=None, nullable=True)
     create_on = db.Column(
         db.TIMESTAMP,
         index=True,
@@ -17,6 +18,3 @@ class ProjectModel(db.Model):
 
     def is_build(self):
         return self.build
-
-    def will_build(self):
-        self.build = True
