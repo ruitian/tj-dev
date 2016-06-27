@@ -12,7 +12,15 @@
         <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel panel-body">
-                    <h1 style="font-size: 24px; margin-bottom: 10px" id="proName">{{ project.proname }}</h1>
+                    <div class="col-md-6 col-sm-6">
+                        <h1 style="font-size: 24px; margin: 0px;" id="proName">{{ project.proname }}</h1>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <button class="btn btn-block">重新构建</button>
+                    </div>
+                </div>
+                <div class="panel-footer" id="status">
+                    <i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>构建中
                 </div>
             </div>
             <div class="panel panel-body">
@@ -39,7 +47,6 @@
             </div>
         </div>
     </div>
-
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function () {
@@ -56,8 +63,34 @@
             text = text.replace(r, function (match, grp) {
                 return String.fromCharCode(parseInt(grp, 16));
             });
-            console.log(msg.resp);
             document.getElementById('log-content').innerText += text;
         });
     </script>
+    <script>
+        var path = window.location.pathname;
+        var verify = path.split('/')[3];
+        var status = null;
+        function getStatus() {
+            $.ajax({
+                url: '/get/build_status',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify({data: verify}),
+                success: function (data) {
+                    if (data['status'] == 1) {
+                        status = data['status']
+                        if (status == 1) {
+                            clearInterval(timer);
+                        }
+                        document.getElementById('status').innerHTML = '<p style="color: green;">构建成功</p>';
+                    } else {
+                        document.getElementById('status').innerHTML = '<p style="color: red;">构建失败</p>';
+                    }
+                },
+                complete: function (XHR) { XHR = null }
+            })
+        }
+        var timer = setInterval("getStatus()", 1000);
+    </script>
+
 {% endblock %}

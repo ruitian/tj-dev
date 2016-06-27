@@ -179,8 +179,25 @@ figure {
 }
 
 /*项目列表页*/
+.item-single-line {
+    font-size: 16px;
+}
 
+.item-danger {
+    color: #ff0000;
+}
 
+.item-success {
+    color: #22c36a;
+}
+
+.item-link {
+    color: #3890ff;
+}
+
+a:hover {
+    text-decoration: none;
+}
 /*项目详情页*/
 .panel .nav a:hover {
     background-color: #FFFFFF;

@@ -15,6 +15,9 @@ false = False
 null = None
 true = True
 
+SUCCESS = 1
+FALSE = 2
+
 
 @app.route('/build')
 @login_required
@@ -22,7 +25,7 @@ def build_code():
     page = request.args.get('page', 1, type=int)
     pagination = ProjectModel.query.order_by(
         ProjectModel.create_on.desc()).paginate(
-            page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+        page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     projects = pagination.items
     return render_template(
         'build.html', projects=projects, pagination=pagination)
@@ -49,7 +52,7 @@ def build_code_new():
         for github_org_data in github_orgs_data:
             repo = eval(redis.hget(
                 current_user.id, github_org_data['login']
-                ))
+            ))
             org_repos[github_org_data['login']] = repo
 
     '''以下是gitlab数据'''
@@ -90,11 +93,11 @@ def create_project():
             proname=proName,
             address=code_address,
             verify=verify
-            )
+        )
         db.session.add(project)
         db.session.commit()
         c1 = subprocess.Popen(
-            'git clone '+code_address,
+            'git clone ' + code_address,
             cwd=app.config['CODE_FOLDER'], shell=True)
         subprocess.Popen.wait(c1)
         return json.dumps({'msg': 'ok', 'verify': project.verify})
@@ -108,17 +111,46 @@ def per_project(verify):
 
 @socketio.on('build project')
 def get_log(json):
-    os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
-    cli = Client(base_url='127.0.0.1:5678')
-    for line in cli.build(path=os.getcwd(),
-                          tag=str(current_user.username+'/'+json['data'])):
-        if 'stream' in eval(line):
-            socketio.emit('response', {'resp': eval(line)})
-        elif 'errorDetail' in eval(line):
+    logs = []
+    project = ProjectModel.query.filter_by(proname=json['data']).first()
+    if not project.is_build():
+        os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
+        cli = Client(base_url='172.16.6.130:5678')
+        lines = cli.build(path=os.getcwd(), stream=True, decode=True, nocache=True,
+                          tag=str(current_user.username + '/' + json['data']))
+        for line in lines:
+            logs.append(line)
+        redis.hset(project.id, project.verify, logs)
+        send_log(logs)
+        project.build = True
+        if 'Successfully built' in logs[-1]['stream']:
+            project.success = 1
+        else:
+            project.success = 2
+        db.session.add(project)
+        db.session.commit()
+    else:
+        lines = eval(redis.hget(project.id, project.verify))
+        send_log(lines)
+
+
+def send_log(lines):
+    for line in lines:
+        if 'stream' in line:
+            socketio.emit('response', {'resp': line})
+        elif 'errorDetail' in line:
             socketio.emit(
                 'response', {
-                    'resp': eval(line)['errorDetail']
+                    'resp': line['errorDetail']
                 }
             )
-        elif 'status' in eval(line):
-            socketio.emit('response', {'resp': eval(line)})
+        elif 'status' in line:
+            socketio.emit('response', {'resp': line})
+
+
+@app.route('/get/build_status', methods=['POST'])
+def get_build_status():
+    if request.method == 'POST':
+        verify = json.loads(request.get_data())['data']
+        project = ProjectModel.query.filter_by(verify=verify).first()
+        return json.dumps({'status': project.success})

@@ -32,10 +32,26 @@
                     <tbody>
                     {% for project in projects %}
                         <tr>
-                            <td>{{ project.proname }}</td>
-                            <td>{{ moment(project.create_on).fromNow(no_suffix=false, refresh = true) }}</td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <div class="item-link">
+                                    <a href="{{ url_for('per_project', verify=project.verify) }}">
+                                        {{ project.proname }}
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-single-line">
+                                    {{ moment(project.create_on).fromNow(no_suffix=false, refresh = true) }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if project.success == 1 %}
+                                    <div class="item-single-line item-success">执行成功</div>
+                                {% else %}
+                                    <div class="item-single-line item-danger">执行失败</div>
+                                {% endif %}
+                            </td>
+                            <td><a href="">部署</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
