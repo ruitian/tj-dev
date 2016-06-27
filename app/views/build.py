@@ -116,8 +116,8 @@ def get_log(json):
     if not project.is_build():
         os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
         cli = Client(base_url='172.16.6.130:5678')
-        lines = cli.build(path=os.getcwd(), stream=True, decode=True, nocache=True,
-                          tag=str(current_user.username + '/' + json['data']))
+        lines = cli.build(path=os.getcwd(), stream=True, decode=True,
+                          tag=str(json['data']))
         for line in lines:
             logs.append(line)
         redis.hset(project.id, project.verify, logs)

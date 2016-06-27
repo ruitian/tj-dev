@@ -77,20 +77,22 @@
                 dataType: 'json',
                 data: JSON.stringify({data: verify}),
                 success: function (data) {
-                    if (data['status'] == 1) {
-                        status = data['status']
+                    status = data['status'];
+                    if (status == 1) {
                         if (status == 1) {
                             clearInterval(timer);
                         }
                         document.getElementById('status').innerHTML = '<p style="color: green;">构建成功</p>';
-                    } else {
+                    } else if(status == 2) {
                         document.getElementById('status').innerHTML = '<p style="color: red;">构建失败</p>';
+                    } else {
+                        document.getElementById('status').innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>构建中';
                     }
                 },
                 complete: function (XHR) { XHR = null }
             })
         }
-        var timer = setInterval("getStatus()", 1000);
+        var timer = setInterval("getStatus()", 5000);
     </script>
 
 {% endblock %}
