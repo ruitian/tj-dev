@@ -73,9 +73,8 @@
                 var trs = document.getElementsByTagName("tbody")[0].children;
                 for (var i = 0; i < trs.length; i++) {
                     data[i] = trs[i].getElementsByTagName('td')[1].innerText;
-                    trs[i].getElementsByTagName('td')[2].innerHTML = '<img src="{{ url_for('static', filename='img/loading.gif') }}">';
+                    trs[i].getElementsByTagName('td')[2].innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>';
                 }
-                console.log(data);
                 $.ajax({
                     url: '/server/ping',
                     type: 'post',
