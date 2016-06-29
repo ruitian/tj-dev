@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
 {% endblock %}
 {% block page_content %}
+    {{ moment.include_moment() }}
+    {{ moment.lang("zh-CN") }}
     <div class="top-name">
         代码构建
     </div>
@@ -54,7 +56,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination">
+            <div class="pager">
                 {{ macros.pagination_widget(pagination, '.build_code') }}
             </div>
         </div>
