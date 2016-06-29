@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from app import db
 
-from .app_server import AppServer
-
 
 class AppModel(db.Model):
     __tablename__ = 'application'
