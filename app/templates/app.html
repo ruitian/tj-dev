@@ -6,6 +6,9 @@
 {% endblock %}
 
 {% block page_content %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang("zh-CN") }}
     <div class="top-name">
         <i class="fa fa-arrow-left"></i>
         <a href="{{ url_for('apps') }}">应用详情</a>
@@ -30,11 +33,41 @@
                         </div>
                         <div>
                             <span class="title-info-label">所在环境</span>
-                            <a href="#">{{ apps.host }}</a>
+                            <a href="#" id="host">{{ apps.host }}</a>
+                        </div>
+                    </div>
+                    <div class="text-muted">
+                        <div>
+                            <span class="title-info-label">运行状态</span>
+                            <span id="status"></span>
+                        </div>
+                        <div>
+                            <span class="title-info-label">访问地址</span>
+                            <a href="http://{{ apps.host }}:{{ apps.port }}" target="_blank">{{ apps.host }}:{{ apps.port }}</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+            var host = '{{ apps.host }}';
+            var name = '{{ apps.appname }}';
+            $.ajax({
+                url: '/apps/per/status',
+                dataType: 'json',
+                type: 'post',
+                data: JSON.stringify({'host': host, 'name': name}),
+                success: function (data) {
+                    if (data['status'] == 'up') {
+                        document.getElementById('status').style.color = '#169f2d';
+                        document.getElementById('status').innerText = '运行中';
+                    } else {
+                        document.getElementById('status').style.color = 'red';
+                        document.getElementById('status').innerText = '待机';
+                    }
+                }
+            });
+    </script>
 {% endblock %}

@@ -233,6 +233,10 @@ form .image {
     padding: 0px;
 }
 
+.input-appName {
+    margin: 0px;
+    padding: 0px;
+}
 /* 应用详情页 */
 .title-img {
     width: 120px;
@@ -265,6 +269,12 @@ form .image {
 
 .title-info {
     font-size: 13px;
+}
+
+
+.title-title .title-info>div {
+    float: left;
+    margin-right: 50px;
 }
 
 .text-muted .title-info-label {

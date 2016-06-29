@@ -115,7 +115,7 @@ def get_log(json):
     project = ProjectModel.query.filter_by(proname=json['data']).first()
     if not project.is_build():
         os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
-        cli = Client(base_url='172.16.6.130:5678')
+        cli = Client(base_url='123.206.205.95:5678')
         lines = cli.build(path=os.getcwd(), stream=True, decode=True,
                           tag=str(json['data']))
         for line in lines:

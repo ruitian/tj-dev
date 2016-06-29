@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 from flask import render_template
 from flask import request
 from flask import redirect
@@ -18,7 +19,12 @@ from app.models import AppModel
 @app.route('/apps')
 @login_required
 def apps():
-    return render_template('container.html')
+    page = request.args.get('page', 1, type=int)
+    pagination = AppModel.query.order_by(
+        AppModel.create_on.desc()).paginate(
+            page, app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+    apps = pagination.items
+    return render_template('container.html', apps=apps, pagination=pagination)
 
 
 @app.route('/apps/create/<verify>')
@@ -49,7 +55,7 @@ def per_app(verify):
             container = cli.create_container(
                 image=image, ports=[port], name=appname,
                 host_config=cli.create_host_config(port_bindings={
-                    port: 3000
+                    3000: (ip, port)
                 })
             )
             apps = AppModel(
@@ -68,5 +74,43 @@ def per_app(verify):
                 return redirect(url_for('per_app', verify=verify))
         except:
             flash(u'未知错误', category='danger')
-            return redirect(url_for('per_app', verify=verify))
+            return redirect(url_for('apps'))
     return render_template('app.html', apps=apps)
+
+
+@app.route('/apps/per/status', methods=['POST'])
+def container_status():
+    names = []
+    data = json.loads(request.get_data())
+    cli = Client(base_url=data['host']+':5678')
+    containers = cli.containers()
+    for container in containers:
+        names.append(container['Names'][0].split('/')[1])
+    if data['name'] in names:
+        status = 'up'
+    else:
+        status = 'down'
+    return json.dumps({'status': status})
+
+
+@app.route('/apps/check/appname', methods=['POST'])
+def check_appname():
+    data = json.loads(request.get_data())
+    app = AppModel.query.filter_by(appname=data['data']).first()
+    if app is None:
+        return json.dumps({'resp': 'ok'})
+    else:
+        return json.dumps({'resp': 'no'})
+
+
+@app.route('/apps/delete', methods=['POST'])
+def delete_app():
+    data = json.loads(request.get_data())
+    app = AppModel.query.filter_by(appname=data['data']).first()
+    try:
+        db.session.delete(app)
+    except:
+        db.session.roolback()
+        return json.dumps({'resp': 'no'})
+    db.session.commit()
+    return json.dumps({'resp': 'ok'})

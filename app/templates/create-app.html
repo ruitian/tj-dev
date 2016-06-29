@@ -17,7 +17,10 @@
                     <div class="col-md-9">
                         <label class="setting-label">应用名称</label>
                         <div class="setting-info">
-                            <input type="text" class="form-control" name="appname">
+                            <div class="form-group col-xs-8  input-appName">
+                                <input type="text" class="form-control" name="appname" oninput="checkAppname(this)" required>
+                            </div>
+                            <span class="col-xs-4" id="status"></span>
                         </div>
                     </div>
                 </div>
@@ -53,16 +56,45 @@
                     <div class="col-md-9">
                         <label class="setting-label">映射端口</label>
                         <div class="setting-info">
-                            <input type="text" class="form-control" name="port">
+                            <input type="text" class="form-control" name="port" required>
                         </div>
                     </div>
                 </div>
                 <div class="setting-section">
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-block right">开始创建</button>
+                        <button type="submit" class="btn btn-block right" id="create" disabled="disabled">开始创建</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+        function checkAppname(inputData) {
+            var data = inputData.value;
+            var statusId = document.getElementById('status');
+            if (data.length == 0) {
+                statusId.innerText = '';
+                statusId.disabled = true;
+            } else {
+                $.ajax({
+                    url: '/apps/check/appname',
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify({data: data}),
+                    success: function (data) {
+                        if (data['resp'] == 'ok') {
+                            statusId.style.color = '#169f2d';
+                            statusId.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+                            document.getElementById('create').disabled = false;
+                        } else {
+                            statusId.style.color = 'red';
+                            statusId.innerText = '名称已被占用';
+                            document.getElementById('create').disabled = true;
+                        }
+                    }
+                });
+
+            }
+        }
+    </script>
 {% endblock %}
