@@ -51,11 +51,20 @@
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function () {
             var proname = document.getElementById('proName').innerText;
-            socket.emit('build project', {data: proname});
+            $.ajax({
+                url: '/build/project',
+                dataType: 'json',
+                type: 'post',
+                data: JSON.stringify({data: proname}),
+                async: true
+            });
         });
         socket.on('response', function (msg) {
             if (msg.resp.hasOwnProperty('stream')) {
                 var text = msg.resp['stream'];
+                if(msg.resp['stream'].indexOf('Successfully built') >= 0) {
+                    document.getElementById('status').innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>上传代码中';
+                }
             } else {
                 var text = msg.resp['message'];
             }
@@ -92,7 +101,7 @@
                 complete: function (XHR) { XHR = null }
             })
         }
-        var timer = setInterval("getStatus()", 5000);
+        var timer = setInterval("getStatus()", 3000);
     </script>
 
 {% endblock %}

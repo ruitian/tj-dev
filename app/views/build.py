@@ -2,11 +2,9 @@
 import os
 import json
 import subprocess
-import time
 from flask_login import login_required, current_user
 from flask import render_template, request
 from docker import Client
-from io import BytesIO
 
 from app import app, redis, db, socketio
 from app.models import ProjectModel
@@ -109,19 +107,22 @@ def per_project(verify):
     return render_template('project.html', project=project)
 
 
-@socketio.on('build project')
-def get_log(json):
+@app.route('/build/project', methods=['POST'])
+def get_log():
     logs = []
-    project = ProjectModel.query.filter_by(proname=json['data']).first()
+    json_data = json.loads(request.get_data())
+    project = ProjectModel.query.filter_by(proname=json_data['data']).first()
     if not project.is_build():
-        os.chdir(app.config['CODE_FOLDER'] + '/' + json['data'])
-        cli = Client(base_url='123.206.205.95:5678')
-        lines = cli.build(path=os.getcwd(), stream=True, decode=True,
-                          tag=str(json['data']))
-        for line in lines:
+        os.chdir(app.config['CODE_FOLDER'] + '/' + json_data['data'])
+        cli = Client(base_url='172.16.6.130:5678')
+        for line in cli.build(path=os.getcwd(), stream=True, decode=True,
+                              tag=str('172.16.6.130:5000/' + json_data['data'])):
+            send_log(line)
             logs.append(line)
+        # 向私有仓库推送镜像, 没有log的打印
+        for line in cli.push('172.16.6.130:5000/' + json_data['data'], stream=True):
+            assert line
         redis.hset(project.id, project.verify, logs)
-        send_log(logs)
         project.build = True
         if 'Successfully built' in logs[-1]['stream']:
             project.success = 1
@@ -131,21 +132,22 @@ def get_log(json):
         db.session.commit()
     else:
         lines = eval(redis.hget(project.id, project.verify))
-        send_log(lines)
+        for line in lines:
+            send_log(line)
+    return json.dumps({'msg': 'ok'})
 
 
-def send_log(lines):
-    for line in lines:
-        if 'stream' in line:
-            socketio.emit('response', {'resp': line})
-        elif 'errorDetail' in line:
-            socketio.emit(
-                'response', {
-                    'resp': line['errorDetail']
-                }
-            )
-        elif 'status' in line:
-            socketio.emit('response', {'resp': line})
+def send_log(line):
+    if 'stream' in line:
+        socketio.emit('response', {'resp': line})
+    elif 'errorDetail' in line:
+        socketio.emit(
+            'response', {
+                'resp': line['errorDetail']
+            }
+        )
+    elif 'status' in line:
+        socketio.emit('response', {'resp': line})
 
 
 @app.route('/get/build_status', methods=['POST'])
