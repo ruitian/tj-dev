@@ -15,6 +15,7 @@ true = True
 
 SUCCESS = 1
 FALSE = 2
+HOST = '172.16.6.130'
 
 
 @app.route('/build')
@@ -114,13 +115,13 @@ def get_log():
     project = ProjectModel.query.filter_by(proname=json_data['data']).first()
     if not project.is_build():
         os.chdir(app.config['CODE_FOLDER'] + '/' + json_data['data'])
-        cli = Client(base_url='172.16.6.130:5678')
+        cli = Client(base_url=HOST+':5678')
         for line in cli.build(path=os.getcwd(), stream=True, decode=True,
-                              tag=str('172.16.6.130:5000/' + json_data['data'])):
+                              tag=str(HOST+':5000/' + json_data['data'])):
             send_log(line)
             logs.append(line)
         # 向私有仓库推送镜像, 没有log的打印
-        for line in cli.push('172.16.6.130:5000/' + json_data['data'], stream=True):
+        for line in cli.push(HOST+':5000/' + json_data['data'], stream=True):
             assert line
         redis.hset(project.id, project.verify, logs)
         project.build = True
