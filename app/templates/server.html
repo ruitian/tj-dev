@@ -30,7 +30,9 @@
                         <td>{{ server.nickname }}</td>
                         <td>{{ server.Ip }}</td>
                         <td></td>
-                        <td></td>
+                        <td>
+                            <button class="btn btn-default" onclick="deleteServer(this)">删除</button>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -68,35 +70,60 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <script>
-            $(document).ready(function () {
-                var data = {};
-                var trs = document.getElementsByTagName("tbody")[0].children;
-                for (var i = 0; i < trs.length; i++) {
-                    data[i] = trs[i].getElementsByTagName('td')[1].innerText;
-                    trs[i].getElementsByTagName('td')[2].innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>';
+        $(document).ready(function () {
+            var data = {};
+            var trs = document.getElementsByTagName("tbody")[0].children;
+            for (var i = 0; i < trs.length; i++) {
+                data[i] = trs[i].getElementsByTagName('td')[1].innerText;
+                trs[i].getElementsByTagName('td')[2].innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>';
+            }
+            $.ajax({
+                url: '/server/ping',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify({data: data}),
+                success: function (data) {
+                    for (var i in data) {
+                        if (data[i] == 0) {
+                            trs[i].getElementsByTagName('td')[2].className = 'green';
+                            trs[i].getElementsByTagName('td')[2].innerText = '正常';
+                        }
+                        else if (data[i] == 'false') {
+                            trs[i].getElementsByTagName('td')[2].className = 'red';
+                            trs[i].getElementsByTagName('td')[2].innerText = '检查docker';
+                        }
+                        else {
+                            trs[i].getElementsByTagName('td')[2].className = 'red';
+                            trs[i].getElementsByTagName('td')[2].innerText = '连接失败';
+                        }
+                    }
                 }
+            })
+        });
+    </script>
+    <script>
+        function deleteServer(btn) {
+            var td = btn.parentNode;
+            var tr = td.parentNode;
+            var parent = tr.parentNode;
+            var host = tr.children[1].innerText;
+            if (confirm("确定要删除此主机?")) {
+                td.innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在删除';
                 $.ajax({
-                    url: '/server/ping',
-                    type: 'post',
+                    url: '/server/delete',
                     dataType: 'json',
-                    data: JSON.stringify({data: data}),
+                    type: 'post',
+                    data: JSON.stringify({data: host}),
                     success: function (data) {
-                        for (var i in data) {
-                            if (data[i] == 0) {
-                                trs[i].getElementsByTagName('td')[2].className = 'green';
-                                trs[i].getElementsByTagName('td')[2].innerText = '正常';
-                            }
-                            else if (data[i] == 'false') {
-                                trs[i].getElementsByTagName('td')[2].className = 'red';
-                                trs[i].getElementsByTagName('td')[2].innerText = '检查docker';
-                            }
-                            else {
-                                trs[i].getElementsByTagName('td')[2].className = 'red';
-                                trs[i].getElementsByTagName('td')[2].innerText = '连接失败';
-                            }
+                        if (data['resp'] == 'ok') {
+                            parent.removeChild(tr);
+                        } else if (data['resp'] == 'no') {
+                            alert('删除失败');
+                            td.innerHTML = '<button class="btn btn-default" onclick="deleteServer(this)">删除</button>';
                         }
                     }
                 })
-            });
+            }
+        }
     </script>
 {% endblock %}

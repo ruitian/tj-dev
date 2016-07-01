@@ -89,3 +89,17 @@ def check_docker(ip):
         return True
     except Exception, e:
         return False
+
+
+@app.route('/server/delete', methods=['POST'])
+@login_required
+def delete_server():
+    data = json.loads(request.get_data())
+    host = data['data']
+    server = ServerModel.query.filter_by(Ip=host).first()
+    if server is None:
+        return json.dumps({'resp': 'no'})
+    else:
+        db.session.delete(server)
+        db.session.commit()
+        return json.dumps({'resp': 'ok'})

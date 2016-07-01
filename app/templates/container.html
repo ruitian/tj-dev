@@ -53,10 +53,10 @@
     </div>
     <script>
         function deleteApp(btn) {
-            td = btn.parentNode;
-            parent = btn.parentNode.parentNode.parentNode;
-            tr = btn.parentNode.parentNode;
-            appName = btn.parentNode.parentNode.childNodes[1].childNodes[1].innerText;
+            var td = btn.parentNode;
+            var parent = btn.parentNode.parentNode.parentNode;
+            var tr = btn.parentNode.parentNode;
+            var appName = btn.parentNode.parentNode.childNodes[1].childNodes[1].innerText;
             if (confirm('你确定要删除此应用?')) {
                 btn.parentNode.innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在删除';
                 $.ajax({
