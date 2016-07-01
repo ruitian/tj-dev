@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block link %}
+    <!--suppress ALL -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/build.css') }}">
 {% endblock %}
@@ -19,7 +20,7 @@
                 <span><i class="fa fa-tags fa-4x" aria-hidden="true"></i></span>
             </div>
             <div class="title-title">
-                <h2>{{ apps.appname }}</h2>
+                <h2 id="appName">{{ apps.appname }}</h2>
                 <div class="text-muted sub-title">
                     <span>部署于</span>
                     {{ moment(apps.create_on).fromNow(no_suffix=false, refresh = true) }}
@@ -29,7 +30,7 @@
                     <div class="text-muted">
                         <div>
                             <span class="title-info-label">所属镜像</span>
-                            <a href="#">{{ apps.image }}</a>
+                            <a href="#" id="image">{{ apps.image }}</a>
                         </div>
                         <div>
                             <span class="title-info-label">所在环境</span>
@@ -39,35 +40,71 @@
                     <div class="text-muted">
                         <div>
                             <span class="title-info-label">运行状态</span>
-                            <span id="status"></span>
+                            <span id="status"><i class="fa fa-spinner fa-spin fa-1x fa-fw"></i></span>
                         </div>
                         <div>
                             <span class="title-info-label">访问地址</span>
-                            <a href="http://{{ apps.host }}:{{ apps.port }}" target="_blank">{{ apps.host }}:{{ apps.port }}</a>
+                            <input type="hidden" id="port" value="{{ apps.port }}">
+                            <a href="http://{{ apps.host }}:{{ apps.port }}"
+                               target="_blank">{{ apps.host }}:{{ apps.port }}</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="panel panel-default">
+        <div class="panel panel-body">
+            <div class="log-panel" id="log-content"></div>
+        </div>
+    </div>
     <script>
-            var host = '{{ apps.host }}';
-            var name = '{{ apps.appname }}';
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function () {
+            $.ajax({
+                url: '/apps/create',
+                type: 'post',
+                dataType: 'json',
+                async: true
+            });
+        });
+        socket.on('response', function (msg) {
+            var message = eval("(" + msg + ")").resp;
+            var progress = eval("(" + message + ")").progress;
+            var status =  eval("(" + message + ")").status;
+            var logContent = document.getElementById('log-content');
+            if (progress == undefined) {
+                logContent.innerHTML += status +'<br>';
+                logContent.scrollTop = logContent.scrollHeight;
+            } else {
+
+                logContent.innerHTML += progress+'<br>';
+                logContent.scrollTop = logContent.scrollHeight;
+            }
+        });
+    </script>
+    <script>
+        function getStatus() {
             $.ajax({
                 url: '/apps/per/status',
                 dataType: 'json',
                 type: 'post',
-                data: JSON.stringify({'host': host, 'name': name}),
+                async: true,
                 success: function (data) {
                     if (data['status'] == 'up') {
                         document.getElementById('status').style.color = '#169f2d';
                         document.getElementById('status').innerText = '运行中';
-                    } else {
+                        clearInterval(timer);
+                    } else if (data['status'] == 'down') {
                         document.getElementById('status').style.color = 'red';
                         document.getElementById('status').innerText = '待机';
+                        clearInterval(timer);
+                    } else {
+                        document.getElementById('status').innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在创建应用';
                     }
                 }
             });
+        }
+        var timer = setInterval("getStatus()", 3000);
     </script>
 {% endblock %}
