@@ -91,8 +91,6 @@ def create_app_socket():
         for line in cli.pull(IMAGE, stream=True):
             socketio.emit('response', json.dumps({'resp': line}))
             logs.append(line)
-        # 日志存入缓存
-        redis.hset(APP_NAME, 'app_logs', logs)
         container = cli.create_container(
             image=IMAGE, ports=[PORT], name=APP_NAME,
             host_config=cli.create_host_config(port_bindings={
@@ -105,10 +103,6 @@ def create_app_socket():
         response = cli.start(container=container.get('Id'))
         if response is not None:
             return json.dumps({'msg': 'false'})
-    # 在缓存中读取日志
-    else:
-        for line in eval(redis.hget(APP_NAME, 'app_logs')):
-            socketio.emit('response', json.dumps({'resp': line}))
     return json.dumps({'msg': 'ok'})
 
 
