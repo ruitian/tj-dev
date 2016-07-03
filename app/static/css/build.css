@@ -49,7 +49,7 @@
     padding-bottom: 20px;
 }
 
-.tab-pane-attached{
+.tab-pane-attached {
     padding-top: 40px;
     position: relative;
     border-style: none solid solid;
@@ -104,13 +104,13 @@
 }
 
 .card {
-    border:2px solid #e5e5e5;
+    border: 2px solid #e5e5e5;
     border-radius: 3px;
     display: block;
 }
 
 figure {
-    margin: 0!important;
+    margin: 0 !important;
 }
 
 .caption {
@@ -128,8 +128,8 @@ figure {
 
 .card .gh-repos {
     width: 100%;
-    padding: 0!important;
-    margin: 0!important;
+    padding: 0 !important;
+    margin: 0 !important;
     position: absolute;
     top: 105%;
     right: -4px;
@@ -155,10 +155,10 @@ figure {
     text-align: left;
     background-color: #fff;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid rgba(0, 0, 0, .15);
     border-radius: 2px;
-    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     background-clip: padding-box;
 }
 
@@ -198,12 +198,13 @@ figure {
 a:hover {
     text-decoration: none;
 }
+
 /*项目详情页*/
 .panel .nav a:hover {
     background-color: #FFFFFF;
 }
 
-.panel .nav .active a{
+.panel .nav .active a {
     border: none;
 }
 
@@ -213,9 +214,8 @@ a:hover {
     background-color: #000;
     color: #fff;
     overflow: scroll;
-    font:400 13px/125% Consolas,"source code pro",Bitstream Vera Sans Mono,Consolas,Courier,monospace;;
+    font: 400 13px/125% Consolas, "source code pro", Bitstream Vera Sans Mono, Consolas, Courier, monospace;;
 }
-
 
 /*应用部分*/
 form .card {
@@ -237,6 +237,7 @@ form .image {
     margin: 0px;
     padding: 0px;
 }
+
 /* 应用详情页 */
 .title-img {
     width: 120px;
@@ -271,12 +272,20 @@ form .image {
     font-size: 13px;
 }
 
-
-.title-title .title-info>div {
+.title-title .title-info > div {
     float: left;
     margin-right: 50px;
 }
 
 .text-muted .title-info-label {
     margin-right: 10px;
+}
+
+.text-muted .btn {
+    font-size: 12px;
+    padding: 2px;
+    margin-right: 20px;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    border-radius: 13px;
 }

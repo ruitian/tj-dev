@@ -9,12 +9,11 @@ from docker import Client
 from app import app
 from app import db
 from app import socketio
-from app import redis
 from app.models import ProjectModel
 from app.models import ServerModel
 from app.models import AppModel
 
-REGISTRY_IP = '172.16.6.130:5000/'
+REGISTRY_IP = '192.168.1.40:5000/'
 APPS = None
 APP_NAME = None
 HOST = None
@@ -148,3 +147,21 @@ def delete_app():
         return json.dumps({'resp': 'no'})
     db.session.commit()
     return json.dumps({'resp': 'ok'})
+
+
+@socketio.on('start app')
+def start_app(message):
+    appName = message['appName']
+    apps = AppModel.query.filter_by(appname=appName).first()
+    cli = Client(base_url=apps.host+':5678')
+    response = cli.start(container=apps.containerId)
+    socketio.emit('status response', {'data': response, 'info': '运行中', 'color': '#169f2d'})
+
+
+@socketio.on('stop app')
+def stop_app(message):
+    appName = message['appName']
+    apps = AppModel.query.filter_by(appname=appName).first()
+    cli = Client(base_url=apps.host+':5678')
+    response = cli.stop(container=apps.containerId)
+    socketio.emit('status response', {'data': response, 'info': '待机', 'color': 'red'})

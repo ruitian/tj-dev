@@ -49,6 +49,12 @@
                                target="_blank">{{ apps.host }}:{{ apps.port }}</a>
                         </div>
                     </div>
+                    <div class="text-muted">
+                        <div>
+                            <button class="btn btn-success" id="start">开始</button>
+                            <button class="btn btn-danger" id="stop">停止</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,14 +77,14 @@
         socket.on('response', function (msg) {
             var message = eval("(" + msg + ")").resp;
             var progress = eval("(" + message + ")").progress;
-            var status =  eval("(" + message + ")").status;
+            var status = eval("(" + message + ")").status;
             var logContent = document.getElementById('log-content');
             if (progress == undefined) {
-                logContent.innerHTML += status +'<br>';
+                logContent.innerHTML += status + '<br>';
                 logContent.scrollTop = logContent.scrollHeight;
             } else {
 
-                logContent.innerHTML += progress+'<br>';
+                logContent.innerHTML += progress + '<br>';
                 logContent.scrollTop = logContent.scrollHeight;
             }
         });
@@ -106,5 +112,24 @@
             });
         }
         var timer = setInterval("getStatus()", 3000);
+    </script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        $("#start").click(function (event) {
+            $("#status").html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在启动');
+            socket.emit('start app', {appName: $("#appName").text()});
+            return false;
+        });
+        $("#stop").click(function (event) {
+            socket.emit('stop app', {appName: $("#appName").text()});
+            $("#status").html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在停止');
+            return false;
+        });
+        socket.on('status response', function (msg) {
+            if (msg['data'] == null) {
+                $('#status').css('color', msg['color']);
+                $("#status").text(msg['info']);
+            }
+        })
     </script>
 {% endblock %}
