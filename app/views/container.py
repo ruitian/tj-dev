@@ -139,14 +139,20 @@ def check_appname():
 @app.route('/apps/delete', methods=['POST'])
 def delete_app():
     data = json.loads(request.get_data())
-    app = AppModel.query.filter_by(appname=data['data']).first()
-    try:
-        db.session.delete(app)
-    except:
-        db.session.roolback()
+    apps = AppModel.query.filter_by(appname=data['data']).first()
+    cli = Client(base_url=apps.host+':5678')
+    response = cli.remove_container(container=apps.containerId, force=True)
+    if response == None:
+        try:
+            db.session.delete(apps)
+        except:
+            db.session.roolback()
+            return json.dumps({'resp': 'no'})
+        db.session.commit()
+        return json.dumps({'resp': 'ok'})
+    else:
         return json.dumps({'resp': 'no'})
-    db.session.commit()
-    return json.dumps({'resp': 'ok'})
+
 
 
 @socketio.on('start app')
