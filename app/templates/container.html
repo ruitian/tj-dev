@@ -20,12 +20,13 @@
             </div>
         </div>
         <div class="panel panel-body">
-            <div class="col-sm-8 server-list">
+            <div class="col-sm-10 server-list">
                 <table class="table table-hover" id="table">
                     <thead>
                     <tr>
                         <th>应用名称</th>
                         <th>最近更新</th>
+                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -38,6 +39,7 @@
                             <td>
                                 {{ moment(app.create_on).fromNow(no_suffix=false, refresh = true) }}
                             </td>
+                            <td></td>
                             <td>
                                 <button class="btn btn-default" onclick="deleteApp(this)">删除</button>
                             </td>
@@ -67,7 +69,7 @@
                     success: function (data) {
                         if (data['resp'] == 'ok') {
                             parent.removeChild(tr);
-                        } else if(data['resp'] == 'no') {
+                        } else if (data['resp'] == 'no') {
                             alert('删除失败');
                             td.innerHTML = '<button class="btn btn-default" onclick="deleteApp(this)">删除</button>';
                         }
@@ -75,6 +77,32 @@
                 })
             }
         }
+    </script>
+    <script>
+        var data = {};
+        var trs = document.getElementsByTagName("tbody")[0].children;
+        for (var i = 0; i < trs.length; i++) {
+            data[i] = trs[i].getElementsByTagName('td')[0].innerText;
+            trs[i].getElementsByTagName('td')[2].innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>';
+        }
+        $.ajax({
+            url: '/apps/all/status',
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify({data: data}),
+            success: function (data) {
+                for (var i in data) {
+                    console.log(data[i]);
+                    if(data[i] == 'up') {
+                        trs[i].getElementsByTagName('td')[2].className = 'green';
+                        trs[i].getElementsByTagName('td')[2].innerText = '运行中';
+                    } else if (data[i] == 'down') {
+                        trs[i].getElementsByTagName('td')[2].className = 'red';
+                        trs[i].getElementsByTagName('td')[2].innerText = '休眠中';
+                    }
+                }
+            }
+        });
     </script>
 {% endblock %}
 {% block script %}
