@@ -15,7 +15,7 @@ true = True
 
 SUCCESS = 1
 FALSE = 2
-HOST = '172.16.6.130'
+HOST = '192.168.1.40'
 
 
 @app.route('/build')
@@ -157,3 +157,22 @@ def get_build_status():
         verify = json.loads(request.get_data())['data']
         project = ProjectModel.query.filter_by(verify=verify).first()
         return json.dumps({'status': project.success})
+
+
+@app.route('/project/delete', methods=['POST'])
+@login_required
+def delete_project():
+    data = json.loads(request.get_data())
+    project = ProjectModel.query.filter_by(proname=data['data']).first()
+    cli = Client(base_url=HOST+':5678')
+    response = cli.remove_image(image=HOST+':5000/'+project.proname, force=True)
+    if response == None:
+        try:
+            db.session.delete(project)
+        except:
+            db.session.roolback()
+            return json.dumps({'resp': 'no'})
+        db.session.commit()
+        return json.dumps({'resp': 'ok'})
+    else:
+        return json.dumps({'resp': 'no'})

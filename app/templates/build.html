@@ -26,6 +26,7 @@
                         <th>最近更新</th>
                         <th>状态</th>
                         <th>操作</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -51,6 +52,9 @@
                                 {% endif %}
                             </td>
                             <td><a href="{{ url_for('create_app', verify=project.verify) }}">部署</a></td>
+                            <td>
+                                <button class="btn btn-default" onclick="deleteProject(this)">删除</button>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -61,4 +65,30 @@
             </div>
         </div>
     </div>
+    <script>
+        function deleteProject(btn) {
+            var td = btn.parentNode;
+            var parent = btn.parentNode.parentNode.parentNode;
+            var tr = btn.parentNode.parentNode;
+            var proName = btn.parentNode.parentNode.childNodes[1].childNodes[1].innerText;
+            console.log(proName);
+            if (confirm('你确定要删除此项目?')) {
+                btn.parentNode.innerHTML = '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> 正在删除';
+                $.ajax({
+                    url: '/project/delete',
+                    dataType: 'json',
+                    type: 'post',
+                    data: JSON.stringify({data: proName}),
+                    success: function (data) {
+                        if (data['resp'] == 'ok') {
+                            parent.removeChild(tr);
+                        } else if (data['resp'] == 'no') {
+                            alert('删除失败');
+                            td.innerHTML = '<button class="btn btn-default" onclick="deleteApp(this)">删除</button>';
+                        }
+                    }
+                })
+            }
+        }
+    </script>
 {% endblock %}
