@@ -114,6 +114,11 @@ def create_project():
 # 手动更新镜像
 @socketio.on('update project')
 def update_project(message):
+    # 更新代码
+    c = subprocess.Popen(
+        'git pull origin master',
+        cwd=app.config['CODE_FOLDER']+'/'+message['data'], shell=True)
+    subprocess.Popen.wait(c)
     cli = Client(base_url=HOST)
     response = cli.tag(
         image=REGISTRY+message['data'],
@@ -198,7 +203,7 @@ def delete_project():
     project = ProjectModel.query.filter_by(proname=data['data']).first()
     cli = Client(base_url=HOST)
     response = cli.remove_image(image=REGISTRY+project.proname, force=True)
-    if response == None:
+    if response is None:
         try:
             db.session.delete(project)
         except:
