@@ -15,7 +15,7 @@ true = True
 
 SUCCESS = 1
 FALSE = 2
-HOST = '192.168.1.40'
+HOST = '172.16.6.130'
 
 
 @app.route('/build')
@@ -95,10 +95,18 @@ def create_project():
         )
         db.session.add(project)
         db.session.commit()
-        c1 = subprocess.Popen(
-            'git clone ' + code_address,
-            cwd=app.config['CODE_FOLDER'], shell=True)
-        subprocess.Popen.wait(c1)
+        if os.path.exists(app.config['CODE_FOLDER']+'/'+proName):
+            # 更新代码
+            c2 = subprocess.Popen(
+                'git pull origin master',
+                cwd=app.config['CODE_FOLDER']+'/'+proName, shell=True)
+            subprocess.Popen.wait(c2)
+        else:
+            # 首次克隆代码
+            c1 = subprocess.Popen(
+                'git clone ' + code_address,
+                cwd=app.config['CODE_FOLDER'], shell=True)
+            subprocess.Popen.wait(c1)
         return json.dumps({'msg': 'ok', 'verify': project.verify})
 
 
