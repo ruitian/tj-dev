@@ -19,7 +19,7 @@
                         <button class="btn btn-warning">重新构建</button>
                     </div>
                     <div class="col-md-3 col-sm-3">
-                        <button class="btn btn-success" onclick="">更新镜像</button>
+                        <button class="btn btn-success" id="update">更新镜像</button>
                     </div>
                 </div>
                 <div class="panel-footer" id="status">
@@ -53,7 +53,7 @@
     <script>
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function () {
-            var proname = document.getElementById('proName').innerText;
+            var proname = $("#proName").text();
             $.ajax({
                 url: '/build/project',
                 dataType: 'json',
@@ -79,6 +79,15 @@
             logContent.innerText += text;
             logContent.scrollTop = logContent.scrollHeight;
         });
+        $("#update").click(function (event) {
+            var proname = $("#proName").text();
+            socket.emit('update project', {data: proname});
+            socket.on('update response', function (msg) {
+                if (msg['data'] == 'ok') {
+                    location.reload(true);
+                }
+            });
+        });
     </script>
     <script>
         var path = window.location.pathname;
@@ -93,9 +102,7 @@
                 success: function (data) {
                     status = data['status'];
                     if (status == 1) {
-                        if (status == 1) {
-                            clearInterval(timer);
-                        }
+                        clearInterval(timer);
                         document.getElementById('status').innerHTML = '<p style="color: green;">构建成功</p>';
                     } else if (status == 2) {
                         document.getElementById('status').innerHTML = '<p style="color: red;">构建失败</p>';
@@ -110,5 +117,4 @@
         }
         var timer = setInterval("getStatus()", 3000);
     </script>
-
 {% endblock %}

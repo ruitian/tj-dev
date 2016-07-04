@@ -15,7 +15,8 @@ true = True
 
 SUCCESS = 1
 FALSE = 2
-HOST = '172.16.6.130'
+HOST = '172.16.6.130:5678'
+REGISTRY = '172.16.6.130:5000/'
 
 
 @app.route('/build')
@@ -110,6 +111,27 @@ def create_project():
         return json.dumps({'msg': 'ok', 'verify': project.verify})
 
 
+# 手动更新镜像
+@socketio.on('update project')
+def update_project(message):
+    cli = Client(base_url=HOST)
+    response = cli.tag(
+        image=REGISTRY+message['data'],
+        repository=REGISTRY+message['data'],
+        tag=1.0,
+        force=True
+    )
+    if response:
+        cli.remove_image(image=REGISTRY+message['data'])
+        project = ProjectModel.query.filter_by(proname=message['data']).first()
+        project.build = False
+        project.success = False
+        db.session.add(project)
+        db.session.commit()
+    socketio.emit('update response', {'data': 'ok'})
+    return json.dumps({'resp': 'ok'})
+
+
 @app.route('/build/new/<verify>')
 def per_project(verify):
     project = ProjectModel.query.filter_by(verify=verify).first()
@@ -123,13 +145,15 @@ def get_log():
     project = ProjectModel.query.filter_by(proname=json_data['data']).first()
     if not project.is_build():
         os.chdir(app.config['CODE_FOLDER'] + '/' + json_data['data'])
-        cli = Client(base_url=HOST+':5678')
+        cli = Client(base_url=HOST)
         for line in cli.build(path=os.getcwd(), stream=True, decode=True,
-                              tag=str(HOST+':5000/' + json_data['data'])):
+                              tag=str(REGISTRY + json_data['data'])):
             send_log(line)
             logs.append(line)
         # 向私有仓库推送镜像, 没有log的打印
-        for line in cli.push(HOST+':5000/' + json_data['data'], stream=True):
+        for line in cli.push(REGISTRY + json_data['data'], stream=True):
+            # 打印出上传的log
+            print line
             assert line
         redis.hset(project.id, project.verify, logs)
         project.build = True
@@ -172,8 +196,8 @@ def get_build_status():
 def delete_project():
     data = json.loads(request.get_data())
     project = ProjectModel.query.filter_by(proname=data['data']).first()
-    cli = Client(base_url=HOST+':5678')
-    response = cli.remove_image(image=HOST+':5000/'+project.proname, force=True)
+    cli = Client(base_url=HOST)
+    response = cli.remove_image(image=REGISTRY+project.proname, force=True)
     if response == None:
         try:
             db.session.delete(project)
