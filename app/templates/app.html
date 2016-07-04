@@ -132,4 +132,22 @@
             }
         })
     </script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function () {
+            var appName = $("#appName").text();
+            var host = $("#host").text();
+            $.ajax({
+                url: '/apps/logs',
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify({'appName': appName, 'host': host})
+            });
+        });
+        socket.on('logs response', function (data) {
+            var logContent = document.getElementById("log-content");
+            logContent.innerText += data['data'];
+            logContent.scrollTop = logContent.scrollHeight;
+        })
+    </script>
 {% endblock %}

@@ -187,3 +187,13 @@ def stop_app(message):
     cli = Client(base_url=apps.host+':5678')
     response = cli.stop(container=apps.containerId)
     socketio.emit('status response', {'data': response, 'info': '待机', 'color': 'red'})
+
+
+# 获取应用的运行日志
+@app.route('/apps/logs', methods=['POST'])
+@login_required
+def get_app_logs():
+    data = json.loads(request.get_data())
+    cli = Client(base_url=str(data['host'])+':5678')
+    for log in cli.logs(container=data['appName'], stream=True):
+        socketio.emit('logs response', {'data': log})
