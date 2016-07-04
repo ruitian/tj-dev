@@ -13,7 +13,7 @@ from app.models import ProjectModel
 from app.models import ServerModel
 from app.models import AppModel
 
-REGISTRY_IP = '192.168.1.40:5000/'
+REGISTRY_IP = '172.16.6.130:5000/'
 APPS = None
 APP_NAME = None
 HOST = None
@@ -107,23 +107,40 @@ def create_app_socket():
 
 @app.route('/apps/per/status', methods=['POST'])
 def container_status():
+    status = find_container(APP_NAME, HOST)
+    return json.dumps({'status': status})
+
+
+@app.route('/apps/all/status', methods=['POST'])
+def all_container_status():
+    resp = {}
+    data = json.loads(request.get_data())
+    for i in range(len(data['data'])):
+        apps = AppModel.query.filter_by(appname=data['data'][str(i)]).first()
+        resp[str(i)] = find_container(apps.appname, apps.host)
+    return json.dumps(resp)
+
+
+def find_container(appName, host):
     run_names = []
     all_names = []
-    cli = Client(base_url=str(HOST)+':5678')
+    cli = Client(base_url=str(host)+':5678')
     run_containers = cli.containers()
     all_containers = cli.containers(all=True)
     for container in run_containers:
         run_names.append(container['Names'][0].split('/')[1])
     for container in all_containers:
         all_names.append(container['Names'][0].split('/')[1])
-    if APP_NAME in run_names:
+    if appName in run_names:
         status = 'up'
+        return status
     else:
-        if APP_NAME in all_names:
+        if appName in all_names:
             status = 'down'
+            return status
         else:
             status = 'pending'
-    return json.dumps({'status': status})
+            return status
 
 
 @app.route('/apps/check/appname', methods=['POST'])
@@ -152,7 +169,6 @@ def delete_app():
         return json.dumps({'resp': 'ok'})
     else:
         return json.dumps({'resp': 'no'})
-
 
 
 @socketio.on('start app')
