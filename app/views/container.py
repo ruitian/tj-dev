@@ -159,7 +159,7 @@ def delete_app():
     apps = AppModel.query.filter_by(appname=data['data']).first()
     cli = Client(base_url=apps.host+':5678')
     response = cli.remove_container(container=apps.containerId, force=True)
-    if response == None:
+    if response is None:
         try:
             db.session.delete(apps)
         except:
