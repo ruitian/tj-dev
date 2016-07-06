@@ -10,6 +10,7 @@ class ProjectModel(db.Model):
     verify = db.Column(db.String(256), nullable=False, index=True)
     build = db.Column(db.Boolean, default=False)
     success = db.Column(db.Integer, default=None, nullable=True)
+    tag = db.Column(db.String(64), default='latest', nullable=False)
     create_on = db.Column(
         db.TIMESTAMP,
         index=True,

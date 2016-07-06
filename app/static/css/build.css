@@ -208,6 +208,33 @@ a:hover {
     border: none;
 }
 
+.tag-name h1{
+    padding-bottom: 10px;
+    font-size: 24px;
+    margin: 0px
+}
+
+.panel-body .tag-name span {
+    font-size: 18px;
+    color: #9b59b6;
+}
+
+.panel-footer {
+    height: 45px;
+}
+
+.panel-footer .btn {
+    padding: 0px 4px;
+}
+
+html {
+    font-size: 10px;
+}
+
+#tag {
+    font-size: 1.3rem;
+}
+
 .log-panel {
     height: 300px;
     padding: 20px;

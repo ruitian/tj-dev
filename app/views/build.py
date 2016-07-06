@@ -213,3 +213,52 @@ def delete_project():
         return json.dumps({'resp': 'ok'})
     else:
         return json.dumps({'resp': 'no'})
+
+
+# 获取镜像的版本
+@app.route('/project/version', methods=['POST'])
+def get_project_version():
+    data = json.loads(request.get_data())
+    tags = []
+    cli = Client(base_url=HOST)
+    images = cli.images()
+    for image in images:
+        for i in image['RepoTags']:
+            if REGISTRY+data['data']+':1.0' == str(i) \
+                    or REGISTRY+data['data']+':latest' == str(i):
+                tags.append(str(i).split(':')[2])
+    return json.dumps({'tags': tags})
+
+
+# 切换版本
+@socketio.on('checkout tag')
+def checkout_tag(message):
+    project = ProjectModel.query.filter_by(proname=message['proName']).first()
+    cli = Client(base_url=HOST)
+    if project.tag != message['tagName']:
+        resp_1 = tag_image(cli, project.proname, ':latest', '2.0')
+        if resp_1:
+            resp_2 = tag_image(cli, project.proname, ':1.0', 'latest')
+        if resp_1 and resp_2:
+            resp_3 = tag_image(cli, project.proname, ':2.0', '1.0')
+        if resp_1 and resp_2 and resp_3:
+            for line in cli.push(REGISTRY + project.proname, stream=True):
+                # 打印出上传的log
+                print line
+                assert line
+            project.tag = message['tagName']
+            db.session.add(project)
+            db.session.commit()
+            socketio.emit('tag response', {'tagName': project.tag})
+        print project.tag
+    return json.dumps({'msg': 'ok'})
+
+
+def tag_image(cli, image, old_tag, tag):
+    response = cli.tag(
+        image=REGISTRY + image + old_tag,
+        repository=REGISTRY + image,
+        tag=tag,
+        force=True
+    )
+    return response
