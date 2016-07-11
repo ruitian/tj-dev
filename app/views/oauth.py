@@ -89,14 +89,15 @@ def gitlab_login():
 @app.route('/gitlab/login/authorized')
 @login_required
 def gitlab_authorized():
-    req_url = "https://gitlab.com/oauth/token"
+    req_url = "http://code.smartstudy.com/oauth/token"
     back_url = 'http://127.0.0.1:5000/gitlab/login/authorized'
     code = request.args.get('code')
+    print code
     data = {
         'client_id':
-            '66dcd9cea621513f6ed2b0ee7bd84eb32fb559ee3a7d4b4a63c38d61103d0bfa',
+            '675532f089b661c350f5b7f1be143145353124cca44ecdae1391d8cb8419e4e9',
         'client_secret':
-            'c5043ac0701b80b880fd1e6c81feff2c785a8024e09e1c370df00136204cd7dc',
+            '290e4d19ff457771d6947f646c649a8ce4aade8c4e3f0d2c633c6df6f4581507',
         'code': code,
         'grant_type': 'authorization_code',
         'redirect_uri': back_url
@@ -111,7 +112,7 @@ def gitlab_authorized():
         current_user.id,
         'gitlab_data',
         urllib2.urlopen(
-            'https://gitlab.com/api/v3/user?access_token=%s'
+            'http://code.smartstudy.com/api/v3/user?access_token=%s'
             % back_data['access_token']
         ).read()
     )
@@ -120,13 +121,13 @@ def gitlab_authorized():
         current_user.id,
         'gitlab_user_repos',
         urllib2.urlopen(
-            'https://gitlab.com/api/v3/projects?access_token=%s'
+            'http://code.smartstudy.com/api/v3/projects?access_token=%s'
             % back_data['access_token']
             ).read()
         )
     # 目前只是缓存所有的个人项目，key 为项目的名称
     repos = urllib2.urlopen(
-        'https://gitlab.com/api/v3/projects?access_token=%s'
+        'http://code.smartstudy.com/api/v3/projects?access_token=%s'
         % back_data['access_token']
         ).read()
     if repos is not None:
