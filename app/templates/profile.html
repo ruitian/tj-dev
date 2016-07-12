@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">修改密码</div>
+            <form action="{{ url_for('user_profile_modify') }}" method="post">
+                <div class="panel panel-body">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input class="form-control" type="text" disabled="disabled" value="{{ current_user.username }}">
+                        <input type="hidden" value="{{ current_user.username }}" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label>原始密码</label>
+                        <input class="form-control" type="password" name="old-password">
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input class="form-control" type="password" name="new-password">
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-info" type="submit">确认修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

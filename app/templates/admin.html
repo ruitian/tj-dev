@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">修改密码</div>
+            <form action="{{ url_for('user_profile_modify') }}" method="post">
+                <div class="panel panel-body">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input class="form-control" type="text" disabled="disabled" value="{{ current_user.username }}">
+                        <input type="hidden" value="{{ current_user.username }}" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label>原始密码</label>
+                        <input class="form-control" type="password" name="old-password">
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input class="form-control" type="password" name="new-password">
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-info" type="submit">确认修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">管理用户</div>
+            <div class="panel panel-body">
+                <div>
+                    <input type="text" class="form-control" id="search" placeholder="输入用户名进行搜索"
+                           onkeypress="if (event.keyCode==13) {searchUser()}">
+                </div>
+                <hr>
+                <table class="table table-hover">
+                    <thead>
+                    <th>用户名</th>
+                    <th>邮箱</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody id="user-info">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">添加用户</div>
+            <form action="{{ url_for('create_user') }}" method="post">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="">用户名</label>
+                        <input class="form-control" type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">邮箱</label>
+                        <input class="form-control" type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">密码</label>
+                        <input class="form-control" type="password" name="password" required>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-default" type="submit">添加</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">Name</h4>
+                </div>
+                <form action="{{ url_for('user_profile_setting') }}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" id="username" name="username">
+                            <input class="form-control" name="password" type="password" placeholder="输入新密码">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchUser() {
+            var userName = $("#search").val();
+            $.ajax({
+                url: '/accounts/search',
+                dataType: 'json',
+                type: 'post',
+                data: JSON.stringify({data: userName}),
+                success: function (data) {
+                    if (data['msg'] == 0) {
+                        alert('没有此账号,请检查输入!');
+                    } else {
+                        $("#user-info").html(
+                                '<tr><td>' +
+                                data['username'] + '<td>' +
+                                data['email'] + '</td><td>' +
+                                '<button class="btn btn-default" onclick="getName(this)" data-toggle="modal" data-target=".bs-example-modal-sm">修改</button></td>'
+                                + '</td></tr>'
+                        )
+                    }
+                }
+            });
+        }
+
+        function getName(btn) {
+            userName = btn.parentNode.parentNode.childNodes[0].innerText;
+            $("#modal-title").text(userName);
+            $("#username").val(userName);
+        }
+    </script>
+{% endblock %}
