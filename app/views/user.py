@@ -41,17 +41,16 @@ def index():
 
 @app.route('/accounts/add', methods=['GET', 'POST'])
 def create_user():
-    form = RegisterForm()
-    if request.method == 'POST' and form.validate_on_submit:
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
         if UserService.get_user_by_email(email) is not None:
-            flash(u'邮箱已被使用')
-            return redirect(url_for('create_user'))
+            flash(u'邮箱已被使用', 'danger')
+            return redirect(url_for('user_profile'))
         if UserService.get_user_by_username(username) is not None:
-            flash(u'用户名已被使用', 'warning')
-            return redirect(url_for('create_user'))
+            flash(u'用户名已被使用', 'danger')
+            return redirect(url_for('user_profile'))
         user = UserModel(
             username=username,
             email=email,
@@ -60,9 +59,7 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         flash(u'用户添加成功', 'success')
-        redirect(url_for('create_user'))
-
-    return render_template('register.html', form=form)
+        return redirect(url_for('user_profile'))
 
 
 @app.route("/accounts/login", methods=["GET", "POST"])

@@ -31,7 +31,8 @@
             <div class="panel-heading">管理用户</div>
             <div class="panel panel-body">
                 <div>
-                    <input type="text" class="form-control" id="search" placeholder="输入用户名进行搜索" onkeypress="if (event.keyCode==13) {searchUser()}">
+                    <input type="text" class="form-control" id="search" placeholder="输入用户名进行搜索"
+                           onkeypress="if (event.keyCode==13) {searchUser()}">
                 </div>
                 <hr>
                 <table class="table table-hover">
@@ -49,8 +50,25 @@
     <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">添加用户</div>
-            <div class="panel panel-body">
-            </div>
+            <form action="{{ url_for('create_user') }}" method="post">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="">用户名</label>
+                        <input class="form-control" type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">邮箱</label>
+                        <input class="form-control" type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">密码</label>
+                        <input class="form-control" type="password" name="password" required>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-default" type="submit">添加</button>
+                </div>
+            </form>
         </div>
     </div>
     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
