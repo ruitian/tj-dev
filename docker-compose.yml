@@ -1,0 +1,18 @@
+web:
+    extends:
+        file: docker-compose-common.yml
+        service: server
+    command: python run.py runserver
+    links:
+        - mysql
+        - redis
+
+mysql:
+    extends:
+        file: docker-compose-common.yml
+        service: mysql
+
+redis:
+    extends:
+        file: docker-compose-common.yml
+        service: redis

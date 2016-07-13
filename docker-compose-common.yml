@@ -1,0 +1,21 @@
+server:
+    build: .
+    ports:
+        - "3000:3000"
+    volumes:
+        - .:/tj-dev
+
+mysql:
+    build: ./dockerfiles/mysql/
+    environment:
+        - "MYSQL_DATABASE=tj"
+        - "MYSQL_USER=tj"
+        - "MYSQL_PASSWORD=tj"
+        - "MYSQL_ROOT_PASSWORD=tj-dev"
+    ports:
+        - "13306:3306"
+
+redis:
+    build: ./dockerfiles/redis/
+    ports:
+        - "6379:6379"
