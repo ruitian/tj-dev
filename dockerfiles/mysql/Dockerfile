@@ -1,4 +1,4 @@
-FROM mysql:5.6
+FROM mysql
 RUN {\
         echo '[mysqld]'; \
         echo 'character-set-server = utf8'; \

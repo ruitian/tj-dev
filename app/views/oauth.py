@@ -91,7 +91,7 @@ def gitlab_login():
 @login_required
 def gitlab_authorized():
     req_url = "http://code.smartstudy.com/oauth/token"
-    back_url = 'http://127.0.0.1:5000/gitlab/login/authorized'
+    back_url = 'http://172.16.3.9:3000/gitlab/login/authorized'
     code = request.args.get('code')
     print code
     data = {
