@@ -13,7 +13,7 @@ from app.models import ProjectModel
 from app.models import ServerModel
 from app.models import AppModel
 
-REGISTRY_IP = '172.16.3.9:5000/'
+REGISTRY_IP = app.config['REGISTRY']
 APPS = None
 APP_NAME = None
 HOST = None
