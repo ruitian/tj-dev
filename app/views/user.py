@@ -129,4 +129,3 @@ def user_profile_modify():
         db.session.commit()
         flash(u'修改成功', 'success')
         return redirect(url_for('user_profile'))
-
