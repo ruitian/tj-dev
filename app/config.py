@@ -9,8 +9,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     FLASKY_POSTS_PER_PAGE = 5
     CODE_FOLDER = BASE_DIR + '/code'
-    HOST = '172.16.3.2'
-    REGISTRY = '172.16.3.2:5000/'
+    HOST = '172.16.3.9'
+    REGISTRY = '172.16.3.9:5000/'
 
     @staticmethod
     def init_app(app):
