@@ -15,8 +15,8 @@ true = True
 
 SUCCESS = 1
 FALSE = 2
-HOST = '172.16.6.130:5678'
-REGISTRY = '172.16.6.130:5000/'
+HOST = '172.16.3.9:5678'
+REGISTRY = '172.16.3.9:5000/'
 
 
 @app.route('/build')
